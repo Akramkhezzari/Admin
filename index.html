@@ -179,6 +179,10 @@
       border-color: var(--info);
     }
 
+    .stat-card.usdt {
+      border-color: #26a17b;
+    }
+
     .stat-card.pending {
       border-color: var(--warning);
     }
@@ -202,6 +206,10 @@
 
     .stat-card.balance .stat-icon {
       color: var(--info);
+    }
+
+    .stat-card.usdt .stat-icon {
+      color: #26a17b;
     }
 
     .stat-card.pending .stat-icon {
@@ -939,6 +947,15 @@
           <div class="stat-label">إجمالي أرصدة المستخدمين</div>
         </div>
         
+        <!-- بطاقة إجمالي USDT -->
+        <div class="stat-card usdt">
+          <div class="stat-icon">
+            <i class="fas fa-coins"></i>
+          </div>
+          <div class="stat-value" id="totalUSDTBalance">0</div>
+          <div class="stat-label">إجمالي رصيد USDT</div>
+        </div>
+        
         <div class="stat-card pending">
           <div class="stat-icon">
             <i class="fas fa-clock"></i>
@@ -1274,6 +1291,7 @@
         
         const usersSnapshot = await db.collection('users').get();
         let totalBalance = 0;
+        let totalUSDT = 0;
         let userCount = 0;
         
         usersSnapshot.forEach((doc) => {
@@ -1289,7 +1307,12 @@
           if (userData.balances && typeof userData.balances === 'object') {
             Object.keys(userData.balances).forEach(currency => {
               const balance = parseFloat(userData.balances[currency]) || 0;
-              totalBalance += balance;
+              
+              if (currency === 'USDT') {
+                totalUSDT += balance;
+              } else {
+                totalBalance += balance;
+              }
             });
           }
         });
@@ -1298,8 +1321,11 @@
         document.getElementById('totalBalance').textContent = 
           formatNumberFrench(totalBalance) + ' DZD';
         
+        document.getElementById('totalUSDTBalance').textContent = 
+          formatNumberFrench(totalUSDT) + ' USDT';
+        
         hideLoading();
-        return { totalBalance, userCount };
+        return { totalBalance, totalUSDT, userCount };
         
       } catch (error) {
         console.error('❌ خطأ في حساب إجمالي الأرصدة:', error);
