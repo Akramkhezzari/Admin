@@ -297,46 +297,81 @@
       border-color: #f44336;
     }
 
-    /* جدول الطلبات */
-    .requests-table-container {
+    /* قائمة الطلبات العمودية */
+    .requests-list-container {
       background: white;
       border-radius: 15px;
       padding: 20px;
       box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-      overflow-x: auto;
     }
 
-    .requests-table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 1000px;
-    }
-
-    .requests-table th {
-      background: var(--light);
-      padding: 15px;
-      text-align: right;
+    .requests-list-title {
+      font-size: 20px;
       font-weight: 700;
-      color: var(--dark);
-      border-bottom: 2px solid var(--border);
+      margin-bottom: 25px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .requests-table td {
-      padding: 15px;
+    .requests-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .request-card {
+      background: var(--light);
+      border-radius: 12px;
+      padding: 20px;
+      border-left: 5px solid;
+      transition: all 0.3s;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .request-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .request-card.pending {
+      border-left-color: var(--warning);
+    }
+
+    .request-card.approved {
+      border-left-color: var(--success);
+    }
+
+    .request-card.rejected {
+      border-left-color: var(--danger);
+    }
+
+    .request-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
       border-bottom: 1px solid var(--border);
     }
 
-    .requests-table tr:hover {
-      background: rgba(0, 102, 51, 0.02);
+    .request-id {
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: var(--gray);
+      background: white;
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
     }
 
-    /* تنسيق الحالات */
-    .status-badge {
-      padding: 6px 12px;
+    .request-status {
+      padding: 6px 15px;
       border-radius: 20px;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
-      display: inline-block;
     }
 
     .status-pending {
@@ -357,14 +392,85 @@
       border: 1px solid rgba(244, 67, 54, 0.2);
     }
 
-    /* أزرار العمل */
-    .action-buttons {
+    .request-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .request-info {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .info-label {
+      font-size: 13px;
+      color: var(--gray);
+      margin-bottom: 8px;
       display: flex;
+      align-items: center;
       gap: 8px;
     }
 
+    .info-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .info-amount {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .info-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .user-id {
+      font-size: 13px;
+      color: var(--gray);
+    }
+
+    .request-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
     .action-btn {
-      padding: 8px 15px;
+      padding: 10px 20px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -373,7 +479,14 @@
       transition: all 0.3s;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 8px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .action-btn.view {
+      background: linear-gradient(135deg, var(--info), #4299e1);
+      color: white;
     }
 
     .action-btn.approve {
@@ -386,14 +499,9 @@
       color: white;
     }
 
-    .action-btn.view {
-      background: linear-gradient(135deg, var(--info), #4299e1);
-      color: white;
-    }
-
     .action-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     }
 
     /* نافذة تفاصيل الطلب */
@@ -671,6 +779,29 @@
       color: var(--gray);
     }
 
+    /* حالة عدم وجود طلبات */
+    .no-requests {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gray);
+    }
+
+    .no-requests-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    .no-requests-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .no-requests-text {
+      font-size: 16px;
+    }
+
     /* التجاوب */
     @media (max-width: 768px) {
       .admin-content {
@@ -685,7 +816,11 @@
         margin: 10px;
       }
       
-      .action-buttons {
+      .request-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .request-actions {
         flex-direction: column;
       }
       
@@ -697,6 +832,31 @@
         left: 20px;
         right: 20px;
         bottom: 20px;
+      }
+      
+      .request-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-box {
+        padding: 30px 20px;
+        margin: 20px;
+      }
+      
+      .stat-card {
+        padding: 20px;
+      }
+      
+      .modal-body {
+        padding: 20px;
+      }
+      
+      .modal-actions {
+        flex-direction: column;
       }
     }
   </style>
@@ -811,30 +971,16 @@
         </div>
       </div>
 
-      <!-- جدول الطلبات -->
-      <div class="requests-table-container">
-        <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; color: var(--primary);">
+      <!-- قائمة الطلبات العمودية -->
+      <div class="requests-list-container">
+        <h2 class="requests-list-title">
           <i class="fas fa-file-invoice-dollar"></i>
           قائمة طلبات الإيداع
         </h2>
         
-        <table class="requests-table">
-          <thead>
-            <tr>
-              <th>رقم الطلب</th>
-              <th>المستخدم</th>
-              <th>المبلغ</th>
-              <th>نوع التحويل</th>
-              <th>رقم العملية</th>
-              <th>التاريخ</th>
-              <th>الحالة</th>
-              <th>الإجراءات</th>
-            </tr>
-          </thead>
-          <tbody id="requestsTableBody">
-            <!-- سيتم ملؤها ديناميكياً -->
-          </tbody>
-        </table>
+        <div class="requests-list" id="requestsList">
+          <!-- سيتم ملؤها ديناميكياً -->
+        </div>
       </div>
     </main>
   </div>
@@ -1061,6 +1207,15 @@
       }
     }
 
+    function getTransferTypeIcon(type) {
+      switch(type) {
+        case 'bank': return 'fas fa-university';
+        case 'binance': return 'fas fa-coins';
+        case 'other': return 'fas fa-exchange-alt';
+        default: return 'fas fa-money-bill-wave';
+      }
+    }
+
     // ========== دوال Firebase ==========
     async function updateDepositStatus(requestId, status, adminNotes = '') {
       try {
@@ -1177,7 +1332,7 @@
           });
           
           updateStats(stats);
-          renderRequestsTable(requests);
+          renderRequestsList(requests);
         }, (error) => {
           console.error('❌ خطأ في الاستماع لتحديثات الطلبات:', error);
           showToast('❌ خطأ في تحديث الطلبات', 'error');
@@ -1191,9 +1346,9 @@
       document.getElementById('totalCount').textContent = stats.total;
     }
 
-    function renderRequestsTable(requests) {
-      const tableBody = document.getElementById('requestsTableBody');
-      tableBody.innerHTML = '';
+    function renderRequestsList(requests) {
+      const requestsList = document.getElementById('requestsList');
+      requestsList.innerHTML = '';
       
       let filteredRequests = requests;
       
@@ -1213,69 +1368,130 @@
       }
       
       if (filteredRequests.length === 0) {
-        tableBody.innerHTML = `
-          <tr>
-            <td colspan="8" style="text-align: center; padding: 40px; color: var(--gray);">
-              <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
-              <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">لا توجد طلبات</div>
-              <div>${currentSearch ? 'لم يتم العثور على طلبات تطابق بحثك' : 'لا توجد طلبات إيداع لعرضها'}</div>
-            </td>
-          </tr>
+        requestsList.innerHTML = `
+          <div class="no-requests">
+            <div class="no-requests-icon">
+              <i class="fas fa-inbox"></i>
+            </div>
+            <div class="no-requests-title">لا توجد طلبات</div>
+            <div class="no-requests-text">
+              ${currentSearch ? 'لم يتم العثور على طلبات تطابق بحثك' : 'لا توجد طلبات إيداع لعرضها'}
+            </div>
+          </div>
         `;
         return;
       }
       
       filteredRequests.forEach(request => {
-        const row = document.createElement('tr');
+        const requestCard = document.createElement('div');
+        requestCard.className = `request-card ${request.status}`;
         
         const date = request.createdAt ? formatDate(request.createdAt) : '-';
         const amountText = formatCurrency(request.amount, request.currency);
         const transferTypeText = getTransferTypeText(request.transferType);
+        const transferTypeIcon = getTransferTypeIcon(request.transferType);
         const statusText = getStatusText(request.status);
         const statusClass = getStatusClass(request.status);
+        const userInitial = request.userName ? request.userName.charAt(0) : 'م';
         
-        row.innerHTML = `
-          <td>
-            <div style="font-family: 'Courier New', monospace; font-size: 12px; background: var(--light); padding: 5px 10px; border-radius: 5px;">
+        requestCard.innerHTML = `
+          <div class="request-header">
+            <div class="request-id">
+              <i class="fas fa-hashtag"></i>
               ${request.id.substring(0, 8)}...
             </div>
-          </td>
-          <td>
-            <div style="font-weight: 700;">${request.userName || 'مستخدم'}</div>
-            <div style="font-size: 12px; color: var(--gray);">ID: ${request.userId}</div>
-          </td>
-          <td>
-            <div style="font-weight: 700; font-size: 16px; color: var(--primary);">${amountText}</div>
-          </td>
-          <td>${transferTypeText}</td>
-          <td>
-            <div style="font-family: 'Courier New', monospace; font-size: 12px;">${request.transactionNumber}</div>
-          </td>
-          <td>${date}</td>
-          <td>
-            <span class="status-badge ${statusClass}">${statusText}</span>
-          </td>
-          <td>
-            <div class="action-buttons">
-              <button class="action-btn view" data-id="${request.id}">
-                <i class="fas fa-eye"></i>
-                عرض
-              </button>
-              ${request.status === 'pending' ? `
-                <button class="action-btn approve" data-id="${request.id}">
-                  <i class="fas fa-check"></i>
-                  تأكيد
-                </button>
-                <button class="action-btn reject" data-id="${request.id}">
-                  <i class="fas fa-times"></i>
-                  رفض
-                </button>
-              ` : ''}
+            <div class="request-status ${statusClass}">
+              ${statusText}
             </div>
-          </td>
+          </div>
+          
+          <div class="request-content">
+            <!-- معلومات المستخدم -->
+            <div class="request-info">
+              <div class="info-label">
+                <i class="fas fa-user"></i>
+                المستخدم
+              </div>
+              <div class="info-value info-user">
+                <div class="user-avatar">${userInitial}</div>
+                <div class="user-info">
+                  <div class="user-name">${request.userName || 'مستخدم'}</div>
+                  <div class="user-id">ID: ${request.userId}</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- المبلغ -->
+            <div class="request-info">
+              <div class="info-label">
+                <i class="fas fa-money-bill-wave"></i>
+                المبلغ
+              </div>
+              <div class="info-value info-amount">${amountText}</div>
+            </div>
+            
+            <!-- نوع التحويل -->
+            <div class="request-info">
+              <div class="info-label">
+                <i class="${transferTypeIcon}"></i>
+                نوع التحويل
+              </div>
+              <div class="info-value">${transferTypeText}</div>
+            </div>
+            
+            <!-- رقم العملية -->
+            <div class="request-info">
+              <div class="info-label">
+                <i class="fas fa-receipt"></i>
+                رقم العملية
+              </div>
+              <div class="info-value" style="font-family: 'Courier New', monospace; font-size: 14px;">
+                ${request.transactionNumber}
+              </div>
+            </div>
+            
+            <!-- التاريخ -->
+            <div class="request-info">
+              <div class="info-label">
+                <i class="fas fa-calendar"></i>
+                تاريخ الطلب
+              </div>
+              <div class="info-value">${date}</div>
+            </div>
+            
+            <!-- ملاحظات -->
+            <div class="request-info">
+              <div class="info-label">
+                <i class="fas fa-sticky-note"></i>
+                ملاحظات
+              </div>
+              <div class="info-value">
+                ${request.notes ? request.notes.substring(0, 50) + (request.notes.length > 50 ? '...' : '') : 'لا توجد'}
+              </div>
+            </div>
+          </div>
+          
+          <div class="request-actions">
+            <button class="action-btn view" data-id="${request.id}">
+              <i class="fas fa-eye"></i>
+              عرض التفاصيل
+            </button>
+            
+            ${request.status === 'pending' ? `
+              <button class="action-btn approve" data-id="${request.id}">
+                <i class="fas fa-check"></i>
+                تأكيد
+              </button>
+              
+              <button class="action-btn reject" data-id="${request.id}">
+                <i class="fas fa-times"></i>
+                رفض
+              </button>
+            ` : ''}
+          </div>
         `;
         
-        tableBody.appendChild(row);
+        requestsList.appendChild(requestCard);
       });
       
       // إضافة الأحداث للأزرار
