@@ -1723,7 +1723,7 @@
       }
     }
 
-    // ========== دالة تحديث حالة طلب السحب (معدلة لمنع التكرار) ==========
+    // ========== دالة تحديث حالة طلب السحب ==========
     async function updateWithdrawStatus(requestId, status, adminNotes = '') {
       try {
         // التحقق مما إذا كان الطلب قيد المعالجة حالياً
@@ -1769,13 +1769,25 @@
           showToast(`✅ تم تأكيد طلب السحب بنجاح`, 'binance');
           
         } else if (status === 'rejected') {
-          // التحقق مما إذا كان قد تم استرجاع الأموال مسبقاً
-          if (requestData.refundedAt) {
-            throw new Error('تم استرجاع الأموال مسبقاً لهذا الطلب');
-          }
-          
           // عند رفض طلب السحب - نعيد المبلغ للمستخدم
           const userRef = db.collection('users').doc(requestData.userId.toString());
+          const userDoc = await userRef.get();
+          
+          if (!userDoc.exists) {
+            throw new Error('بيانات المستخدم غير موجودة');
+          }
+          
+          const userData = userDoc.data();
+          
+          // التأكد من وجود رصيد USDT
+          if (!userData.balances || typeof userData.balances['USDT'] === 'undefined') {
+            throw new Error('رصيد المستخدم غير موجود');
+          }
+          
+          // حساب المبلغ المراد إعادته (المبلغ + الرسوم)
+          const refundAmount = parseFloat(requestData.amount) + parseFloat(requestData.fees || 0);
+          const currentBalance = parseFloat(userData.balances['USDT']);
+          const newBalance = currentBalance + refundAmount;
           
           // استخدام معاملة لضمان تكامل البيانات
           await db.runTransaction(async (transaction) => {
@@ -1787,10 +1799,6 @@
               throw new Error('تم تغيير حالة الطلب أثناء المعالجة');
             }
             
-            if (freshRequestData.refundedAt) {
-              throw new Error('تم استرجاع الأموال مسبقاً');
-            }
-            
             // جلب بيانات المستخدم الحالية
             const freshUserDoc = await transaction.get(userRef);
             const freshUserData = freshUserDoc.data();
@@ -1799,8 +1807,6 @@
               throw new Error('رصيد المستخدم غير موجود');
             }
             
-            // حساب المبلغ المراد إعادته (المبلغ + الرسوم)
-            const refundAmount = parseFloat(requestData.amount) + parseFloat(requestData.fees || 0);
             const freshCurrentBalance = parseFloat(freshUserData.balances['USDT']);
             const freshNewBalance = freshCurrentBalance + refundAmount;
             
@@ -1819,40 +1825,12 @@
               updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
               processedAt: firebase.firestore.FieldValue.serverTimestamp()
             });
-            
-            // تسجيل معاملة الاسترجاع
-            const refundRef = db.collection('refund_transactions').doc();
-            transaction.set(refundRef, {
-              id: refundRef.id,
-              withdrawRequestId: requestId,
-              userId: requestData.userId,
-              userName: requestData.userName,
-              amount: refundAmount,
-              currency: 'USDT',
-              reason: 'رفض طلب السحب',
-              adminNotes: adminNotes || '',
-              timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            
-            // تسجيل معاملة في سجل المستخدم
-            const userTransactionRef = db.collection('users').doc(requestData.userId.toString())
-              .collection('transactions').doc();
-            transaction.set(userTransactionRef, {
-              id: userTransactionRef.id,
-              type: 'refund',
-              amount: refundAmount,
-              currency: 'USDT',
-              description: 'استرجاع رصيد - رفض طلب سحب',
-              withdrawRequestId: requestId,
-              status: 'completed',
-              timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
           });
           
           // تحديث إجمالي الأرصدة
           calculateTotalBalance();
           
-          showToast(`✅ تم رفض طلب السحب وإعادة ${refundAmount.toFixed(2)} USDT إلى رصيد المستخدم`, 'binance');
+          showToast(`✅ تم رفض طلب السحب وإعادة المبلغ إلى رصيد المستخدم`, 'binance');
         }
         
         // إرسال إشعار للمستخدم
@@ -1865,11 +1843,10 @@
       } catch (error) {
         console.error(`❌ خطأ في تحديث حالة طلب السحب:`, error);
         
-        if (error.message.includes('تم معالجة هذا الطلب مسبقاً') || 
-            error.message.includes('تم استرجاع الأموال مسبقاً')) {
+        if (error.message.includes('تم معالجة هذا الطلب مسبقاً')) {
           showToast(`⚠️ ${error.message}`, 'warning');
         } else {
-          showToast(`❌ خطأ في ${status === 'approved' ? 'تأكيد' : 'رفض'} طلب السحب: ${error.message}`, 'error');
+          showToast(`❌ خطأ في ${status === 'approved' ? 'تأكيد' : 'رفض'} طلب السحب`, 'error');
         }
         
         return false;
@@ -2671,117 +2648,32 @@
         if (!currentRequestId) return;
         
         const adminNotes = document.getElementById('depositAdminNotesInput').value.trim();
-        if (confirm('هل أنت متأكد من تأكيد هذا الطلب؟ سيتم إضافة الرصيد للمستخدم تلقائياً.')) {
-          updateDepositStatus(currentRequestId, 'approved', adminNotes);
-        }
+        updateDepositStatus(currentRequestId, 'approved', adminNotes);
       });
       
       document.getElementById('rejectDepositRequestBtn').addEventListener('click', function() {
         if (!currentRequestId) return;
         
         const adminNotes = document.getElementById('depositAdminNotesInput').value.trim();
-        if (confirm('هل أنت متأكد من رفض هذا الطلب؟')) {
-          updateDepositStatus(currentRequestId, 'rejected', adminNotes);
-        }
+        updateDepositStatus(currentRequestId, 'rejected', adminNotes);
       });
       
       // أحداث نافذة تفاصيل طلب السحب
       document.getElementById('closeWithdrawModalBtn').addEventListener('click', closeWithdrawModal);
       document.getElementById('cancelWithdrawActionBtn').addEventListener('click', closeWithdrawModal);
       
-      document.getElementById('approveWithdrawRequestBtn').addEventListener('click', async function() {
+      document.getElementById('approveWithdrawRequestBtn').addEventListener('click', function() {
         if (!currentRequestId) return;
         
         const adminNotes = document.getElementById('withdrawAdminNotesInput').value.trim();
-        
-        if (confirm(`هل أنت متأكد من تأكيد طلب السحب هذا؟
-        
-✅ سيتم تأكيد عملية السحب إلى Binance.
-✅ لن يتم خصم أي مبلغ من حساب النظام.
-✅ المسؤول مسؤول عن تحويل المبلغ يدوياً إلى حساب Binance الخاص بالمستخدم.`)) {
-          
-          // التحقق مرة أخرى من الحالة
-          try {
-            const requestRef = db.collection('withdraw_requests').doc(currentRequestId);
-            const requestDoc = await requestRef.get();
-            
-            if (!requestDoc.exists) {
-              alert('طلب السحب غير موجود!');
-              return;
-            }
-            
-            const requestData = requestDoc.data();
-            
-            if (requestData.status !== 'pending') {
-              alert('تم معالجة هذا الطلب مسبقاً!');
-              closeWithdrawModal();
-              return;
-            }
-            
-            // تنفيذ التأكيد
-            updateWithdrawStatus(currentRequestId, 'approved', adminNotes);
-            
-          } catch (error) {
-            console.error('❌ خطأ في التحقق من حالة الطلب:', error);
-            showToast('❌ خطأ في التحقق من حالة الطلب', 'error');
-          }
-        }
+        updateWithdrawStatus(currentRequestId, 'approved', adminNotes);
       });
       
-      document.getElementById('rejectWithdrawRequestBtn').addEventListener('click', async function() {
+      document.getElementById('rejectWithdrawRequestBtn').addEventListener('click', function() {
         if (!currentRequestId) return;
         
         const adminNotes = document.getElementById('withdrawAdminNotesInput').value.trim();
-        
-        // الحصول على بيانات الطلب لعرض المبلغ
-        try {
-          const requestRef = db.collection('withdraw_requests').doc(currentRequestId);
-          const requestDoc = await requestRef.get();
-          
-          if (!requestDoc.exists) {
-            alert('طلب السحب غير موجود!');
-            return;
-          }
-          
-          const requestData = requestDoc.data();
-          
-          if (requestData.status !== 'pending') {
-            alert('تم معالجة هذا الطلب مسبقاً!');
-            closeWithdrawModal();
-            return;
-          }
-          
-          const refundAmount = parseFloat(requestData.amount) + parseFloat(requestData.fees || 0);
-          
-          if (confirm(`⚠️  تنبيه مهم!
-          
-هل أنت متأكد من رفض طلب السحب هذا؟
-
-✅ سيتم إعادة المبلغ الكامل للمستخدم:
-   المبلغ: ${formatCurrency(requestData.amount, requestData.currency)}
-   الرسوم: ${formatCurrency(requestData.fees, requestData.currency)}
-   الإجمالي: ${formatCurrency(refundAmount, requestData.currency)}
-
-✅ سيتم إضافة المبلغ إلى رصيد USDT الخاص بالمستخدم.
-✅ لن يتم تنفيذ عملية سحب إلى Binance.`)) {
-            
-            // التحقق مرة أخرى قبل التنفيذ
-            const recheckDoc = await requestRef.get();
-            const recheckData = recheckDoc.data();
-            
-            if (recheckData.status !== 'pending') {
-              alert('تم تغيير حالة الطلب! الرجاء تحديث الصفحة.');
-              return;
-            }
-            
-            // تنفيذ الرفض
-            updateWithdrawStatus(currentRequestId, 'rejected', adminNotes);
-          }
-          
-        } catch (error) {
-          console.error('❌ خطأ في التحقق من بيانات الطلب:', error);
-          showToast('❌ خطأ في التحقق من بيانات الطلب', 'error');
-        }
+        updateWithdrawStatus(currentRequestId, 'rejected', adminNotes);
       });
       
       // إغلاق النوافذ بالنقر خارجها
