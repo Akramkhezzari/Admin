@@ -199,6 +199,10 @@
       border-color: var(--primary);
     }
 
+    .stat-card.total-withdraw {
+      border-color: #F0B90B;
+    }
+
     .stat-icon {
       font-size: 40px;
       margin-bottom: 15px;
@@ -226,6 +230,10 @@
 
     .stat-card.total .stat-icon {
       color: var(--primary);
+    }
+
+    .stat-card.total-withdraw .stat-icon {
+      color: #F0B90B;
     }
 
     .stat-value {
@@ -314,6 +322,18 @@
       background: #f44336;
       color: white;
       border-color: #f44336;
+    }
+
+    .filter-btn.binance {
+      background: rgba(240, 185, 11, 0.1);
+      color: #F0B90B;
+      border-color: rgba(240, 185, 11, 0.2);
+    }
+
+    .filter-btn.binance.active {
+      background: #F0B90B;
+      color: #1E2026;
+      border-color: #F0B90B;
     }
 
     /* قائمة الطلبات العمودية */
@@ -471,6 +491,10 @@
       font-size: 16px;
     }
 
+    .user-avatar.binance {
+      background: linear-gradient(135deg, #F0B90B, #F0D90B);
+    }
+
     .user-info {
       display: flex;
       flex-direction: column;
@@ -527,6 +551,11 @@
       color: white;
     }
 
+    .action-btn.binance {
+      background: linear-gradient(135deg, #F0B90B, #F0D90B);
+      color: #1E2026;
+    }
+
     .action-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 15px rgba(0,0,0,0.15);
@@ -579,6 +608,11 @@
       align-items: center;
     }
 
+    .modal-header.binance {
+      background: linear-gradient(135deg, #F0B90B, #F0D90B);
+      color: #1E2026;
+    }
+
     .modal-close {
       background: none;
       border: none;
@@ -594,8 +628,16 @@
       transition: all 0.3s;
     }
 
+    .modal-header.binance .modal-close {
+      color: #1E2026;
+    }
+
     .modal-close:hover {
       background: rgba(255,255,255,0.2);
+    }
+
+    .modal-header.binance .modal-close:hover {
+      background: rgba(30, 32, 38, 0.2);
     }
 
     .modal-body {
@@ -782,6 +824,11 @@
       background: linear-gradient(135deg, var(--warning), #ffb142);
     }
 
+    .toast.binance {
+      background: linear-gradient(135deg, #F0B90B, #F0D90B);
+      color: #1E2026;
+    }
+
     /* البحث */
     .search-container {
       margin-bottom: 20px;
@@ -834,6 +881,67 @@
       font-size: 16px;
     }
 
+    /* التبويبات */
+    .tabs-container {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      padding: 12px 24px;
+      border: none;
+      background: none;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gray);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -17px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px;
+    }
+
+    .tab-btn.binance.active {
+      color: #F0B90B;
+    }
+
+    .tab-btn.binance.active::after {
+      background: #F0B90B;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
     /* التجاوب */
     @media (max-width: 768px) {
       .admin-content {
@@ -870,6 +978,10 @@
         flex-direction: column;
         gap: 10px;
         align-items: flex-start;
+      }
+      
+      .tabs {
+        flex-direction: column;
       }
     }
 
@@ -960,177 +1072,327 @@
           <div class="stat-icon">
             <i class="fas fa-clock"></i>
           </div>
-          <div class="stat-value" id="pendingCount">0</div>
-          <div class="stat-label">طلبات قيد الانتظار</div>
+          <div class="stat-value" id="pendingDepositCount">0</div>
+          <div class="stat-label">طلبات الإيداع قيد الانتظار</div>
         </div>
         
         <div class="stat-card approved">
           <div class="stat-icon">
             <i class="fas fa-check-circle"></i>
           </div>
-          <div class="stat-value" id="approvedCount">0</div>
-          <div class="stat-label">طلبات مؤكدة</div>
+          <div class="stat-value" id="approvedDepositCount">0</div>
+          <div class="stat-label">طلبات الإيداع مؤكدة</div>
+        </div>
+        
+        <div class="stat-card total-withdraw">
+          <div class="stat-icon">
+            <i class="fab fa-binance"></i>
+          </div>
+          <div class="stat-value" id="totalWithdrawCount">0</div>
+          <div class="stat-label">إجمالي طلبات السحب</div>
         </div>
         
         <div class="stat-card rejected">
           <div class="stat-icon">
             <i class="fas fa-times-circle"></i>
           </div>
-          <div class="stat-value" id="rejectedCount">0</div>
-          <div class="stat-label">طلبات مرفوضة</div>
+          <div class="stat-value" id="rejectedDepositCount">0</div>
+          <div class="stat-label">طلبات الإيداع مرفوضة</div>
         </div>
-        
-        <div class="stat-card total">
-          <div class="stat-icon">
-            <i class="fas fa-list-alt"></i>
+      </div>
+
+      <!-- التبويبات -->
+      <div class="tabs-container">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="deposit">
+            <i class="fas fa-file-invoice-dollar"></i>
+            طلبات الإيداع
+          </button>
+          <button class="tab-btn binance" data-tab="withdraw">
+            <i class="fab fa-binance"></i>
+            طلبات السحب إلى Binance
+          </button>
+        </div>
+
+        <!-- تبويب طلبات الإيداع -->
+        <div id="depositTab" class="tab-content active">
+          <!-- الفلاتر والبحث -->
+          <div class="filters-container">
+            <h2 class="filters-title">
+              <i class="fas fa-filter"></i>
+              تصفية طلبات الإيداع
+            </h2>
+            
+            <div class="filter-buttons">
+              <button class="filter-btn active" data-filter="all" data-type="deposit">
+                <i class="fas fa-list"></i>
+                جميع الطلبات
+              </button>
+              <button class="filter-btn pending" data-filter="pending" data-type="deposit">
+                <i class="fas fa-clock"></i>
+                قيد الانتظار
+              </button>
+              <button class="filter-btn approved" data-filter="approved" data-type="deposit">
+                <i class="fas fa-check-circle"></i>
+                مؤكدة
+              </button>
+              <button class="filter-btn rejected" data-filter="rejected" data-type="deposit">
+                <i class="fas fa-times-circle"></i>
+                مرفوضة
+              </button>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+              <div></div>
+              <button id="refreshBalanceBtn" class="filter-btn" style="background: rgba(45, 135, 255, 0.1); color: var(--info);">
+                <i class="fas fa-sync-alt"></i>
+                تحديث الأرصدة
+              </button>
+            </div>
+            
+            <div class="search-container" style="margin-top: 20px;">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" id="depositSearchInput" class="search-input" placeholder="ابحث برقم الطلب أو اسم المستخدم أو رقم العملية...">
+            </div>
           </div>
-          <div class="stat-value" id="totalCount">0</div>
-          <div class="stat-label">إجمالي الطلبات</div>
-        </div>
-      </div>
 
-      <!-- الفلاتر والبحث -->
-      <div class="filters-container">
-        <h2 class="filters-title">
-          <i class="fas fa-filter"></i>
-          تصفية الطلبات
-        </h2>
-        
-        <div class="filter-buttons">
-          <button class="filter-btn active" data-filter="all">
-            <i class="fas fa-list"></i>
-            جميع الطلبات
-          </button>
-          <button class="filter-btn pending" data-filter="pending">
-            <i class="fas fa-clock"></i>
-            قيد الانتظار
-          </button>
-          <button class="filter-btn approved" data-filter="approved">
-            <i class="fas fa-check-circle"></i>
-            مؤكدة
-          </button>
-          <button class="filter-btn rejected" data-filter="rejected">
-            <i class="fas fa-times-circle"></i>
-            مرفوضة
-          </button>
+          <!-- قائمة طلبات الإيداع -->
+          <div class="requests-list-container">
+            <div class="requests-list" id="depositRequestsList">
+              <!-- سيتم ملؤها ديناميكياً -->
+            </div>
+          </div>
         </div>
-        
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-          <div></div>
-          <button id="refreshBalanceBtn" class="filter-btn" style="background: rgba(45, 135, 255, 0.1); color: var(--info);">
-            <i class="fas fa-sync-alt"></i>
-            تحديث الأرصدة
-          </button>
-        </div>
-        
-        <div class="search-container" style="margin-top: 20px;">
-          <i class="fas fa-search search-icon"></i>
-          <input type="text" id="searchInput" class="search-input" placeholder="ابحث برقم الطلب أو اسم المستخدم أو رقم العملية...">
-        </div>
-      </div>
 
-      <!-- قائمة الطلبات العمودية -->
-      <div class="requests-list-container">
-        <h2 class="requests-list-title">
-          <i class="fas fa-file-invoice-dollar"></i>
-          قائمة طلبات الإيداع
-        </h2>
-        
-        <div class="requests-list" id="requestsList">
-          <!-- سيتم ملؤها ديناميكياً -->
+        <!-- تبويب طلبات السحب -->
+        <div id="withdrawTab" class="tab-content">
+          <!-- الفلاتر والبحث لطلبات السحب -->
+          <div class="filters-container">
+            <h2 class="filters-title" style="color: #F0B90B;">
+              <i class="fab fa-binance"></i>
+              تصفية طلبات السحب إلى Binance
+            </h2>
+            
+            <div class="filter-buttons">
+              <button class="filter-btn binance active" data-filter="all" data-type="withdraw">
+                <i class="fas fa-list"></i>
+                جميع الطلبات
+              </button>
+              <button class="filter-btn binance pending" data-filter="pending" data-type="withdraw">
+                <i class="fas fa-clock"></i>
+                قيد الانتظار
+              </button>
+              <button class="filter-btn binance approved" data-filter="approved" data-type="withdraw">
+                <i class="fas fa-check-circle"></i>
+                مؤكدة
+              </button>
+              <button class="filter-btn binance rejected" data-filter="rejected" data-type="withdraw">
+                <i class="fas fa-times-circle"></i>
+                مرفوضة
+              </button>
+            </div>
+            
+            <div class="search-container" style="margin-top: 20px;">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" id="withdrawSearchInput" class="search-input" placeholder="ابحث برقم الطلب أو اسم المستخدم أو معرف Binance...">
+            </div>
+          </div>
+
+          <!-- قائمة طلبات السحب -->
+          <div class="requests-list-container">
+            <div class="requests-list" id="withdrawRequestsList">
+              <!-- سيتم ملؤها ديناميكياً -->
+            </div>
+          </div>
         </div>
       </div>
     </main>
   </div>
 
-  <!-- نافذة تفاصيل الطلب -->
-  <div id="requestModal" class="modal-overlay">
+  <!-- نافذة تفاصيل طلب الإيداع -->
+  <div id="depositRequestModal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
         <h2 style="font-size: 20px; font-weight: 700;">
           <i class="fas fa-file-alt"></i>
           تفاصيل طلب الإيداع
         </h2>
-        <button id="closeModalBtn" class="modal-close">&times;</button>
+        <button id="closeDepositModalBtn" class="modal-close">&times;</button>
       </div>
       
       <div class="modal-body">
         <div class="detail-row">
           <span class="detail-label">رقم الطلب:</span>
-          <span class="detail-value" id="modalRequestId">-</span>
+          <span class="detail-value" id="depositModalRequestId">-</span>
         </div>
         
         <div class="detail-row">
           <span class="detail-label">اسم المستخدم:</span>
-          <span class="detail-value" id="modalUserName">-</span>
+          <span class="detail-value" id="depositModalUserName">-</span>
         </div>
         
         <div class="detail-row">
           <span class="detail-label">معرف المستخدم:</span>
-          <span class="detail-value" id="modalUserId">-</span>
+          <span class="detail-value" id="depositModalUserId">-</span>
         </div>
         
         <div class="detail-row">
           <span class="detail-label">المبلغ:</span>
-          <span class="detail-amount" id="modalAmount">-</span>
+          <span class="detail-amount" id="depositModalAmount">-</span>
         </div>
         
         <div class="detail-row">
           <span class="detail-label">نوع التحويل:</span>
-          <span class="detail-value" id="modalTransferType">-</span>
+          <span class="detail-value" id="depositModalTransferType">-</span>
         </div>
         
         <div class="detail-row">
           <span class="detail-label">رقم العملية:</span>
-          <span class="detail-value" id="modalTransactionNumber">-</span>
+          <span class="detail-value" id="depositModalTransactionNumber">-</span>
         </div>
         
         <div class="detail-row">
           <span class="detail-label">ملاحظات المستخدم:</span>
-          <span class="detail-value" id="modalUserNotes">لا توجد</span>
+          <span class="detail-value" id="depositModalUserNotes">لا توجد</span>
         </div>
         
         <div class="detail-row">
           <span class="detail-label">تاريخ الطلب:</span>
-          <span class="detail-value" id="modalCreatedAt">-</span>
+          <span class="detail-value" id="depositModalCreatedAt">-</span>
         </div>
         
         <div class="detail-row">
           <span class="detail-label">آخر تحديث:</span>
-          <span class="detail-value" id="modalUpdatedAt">-</span>
+          <span class="detail-value" id="depositModalUpdatedAt">-</span>
         </div>
         
         <div class="detail-row">
           <span class="detail-label">الحالة الحالية:</span>
-          <span id="modalStatus" class="status-badge">-</span>
+          <span id="depositModalStatus" class="status-badge">-</span>
         </div>
         
         <!-- ملاحظات المسؤول (إذا كانت موجودة) -->
-        <div id="adminNotesSection" style="display: none; margin-top: 20px; padding: 15px; background: var(--light); border-radius: 10px;">
+        <div id="depositAdminNotesSection" style="display: none; margin-top: 20px; padding: 15px; background: var(--light); border-radius: 10px;">
           <div class="detail-label" style="margin-bottom: 10px;">ملاحظات المسؤول:</div>
-          <div id="modalAdminNotes" style="color: var(--dark);"></div>
+          <div id="depositModalAdminNotes" style="color: var(--dark);"></div>
         </div>
         
         <!-- نموذج الإجراء (يظهر فقط للطلبات pending) -->
-        <div id="actionForm" class="action-form">
+        <div id="depositActionForm" class="action-form">
           <div class="form-group">
-            <label for="adminNotesInput" class="form-label">
+            <label for="depositAdminNotesInput" class="form-label">
               <i class="fas fa-sticky-note"></i>
               ملاحظات المسؤول (اختياري)
             </label>
-            <textarea id="adminNotesInput" class="form-textarea" placeholder="أدخل ملاحظاتك هنا..."></textarea>
+            <textarea id="depositAdminNotesInput" class="form-textarea" placeholder="أدخل ملاحظاتك هنا..."></textarea>
           </div>
           
           <div class="modal-actions">
-            <button id="cancelActionBtn" class="modal-btn cancel">
+            <button id="cancelDepositActionBtn" class="modal-btn cancel">
               <i class="fas fa-times"></i>
               إلغاء
             </button>
-            <button id="rejectRequestBtn" class="modal-btn reject">
+            <button id="rejectDepositRequestBtn" class="modal-btn reject">
               <i class="fas fa-times-circle"></i>
               رفض الطلب
             </button>
-            <button id="approveRequestBtn" class="modal-btn approve">
+            <button id="approveDepositRequestBtn" class="modal-btn approve">
+              <i class="fas fa-check-circle"></i>
+              تأكيد الطلب
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة تفاصيل طلب السحب -->
+  <div id="withdrawRequestModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header binance">
+        <h2 style="font-size: 20px; font-weight: 700;">
+          <i class="fab fa-binance"></i>
+          تفاصيل طلب السحب إلى Binance
+        </h2>
+        <button id="closeWithdrawModalBtn" class="modal-close">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="detail-row">
+          <span class="detail-label">رقم الطلب:</span>
+          <span class="detail-value" id="withdrawModalRequestId">-</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">اسم المستخدم:</span>
+          <span class="detail-value" id="withdrawModalUserName">-</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">معرف المستخدم:</span>
+          <span class="detail-value" id="withdrawModalUserId">-</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">المبلغ:</span>
+          <span class="detail-amount" id="withdrawModalAmount">-</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">الرسوم:</span>
+          <span class="detail-value" id="withdrawModalFees">-</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">المبلغ الصافي:</span>
+          <span class="detail-amount" id="withdrawModalNetAmount">-</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">معرف Binance:</span>
+          <span class="detail-value" id="withdrawModalBinanceId">-</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">تاريخ الطلب:</span>
+          <span class="detail-value" id="withdrawModalCreatedAt">-</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">آخر تحديث:</span>
+          <span class="detail-value" id="withdrawModalUpdatedAt">-</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">ملاحظات المسؤول:</span>
+          <span class="detail-value" id="withdrawModalAdminNotes">لا توجد</span>
+        </div>
+        
+        <div class="detail-row">
+          <span class="detail-label">الحالة الحالية:</span>
+          <span id="withdrawModalStatus" class="status-badge">-</span>
+        </div>
+        
+        <!-- نموذج الإجراء (يظهر فقط للطلبات pending) -->
+        <div id="withdrawActionForm" class="action-form">
+          <div class="form-group">
+            <label for="withdrawAdminNotesInput" class="form-label">
+              <i class="fas fa-sticky-note"></i>
+              ملاحظات المسؤول (اختياري)
+            </label>
+            <textarea id="withdrawAdminNotesInput" class="form-textarea" placeholder="أدخل ملاحظاتك هنا..."></textarea>
+          </div>
+          
+          <div class="modal-actions">
+            <button id="cancelWithdrawActionBtn" class="modal-btn cancel">
+              <i class="fas fa-times"></i>
+              إلغاء
+            </button>
+            <button id="rejectWithdrawRequestBtn" class="modal-btn reject">
+              <i class="fas fa-times-circle"></i>
+              رفض الطلب
+            </button>
+            <button id="approveWithdrawRequestBtn" class="modal-btn approve">
               <i class="fas fa-check-circle"></i>
               تأكيد الطلب
             </button>
@@ -1166,10 +1428,18 @@
     let db;
     let firebaseApp;
     let depositRequestsListener = null;
+    let withdrawRequestsListener = null;
     let usersListener = null;
     let currentRequestId = null;
-    let currentFilter = 'all';
-    let currentSearch = '';
+    let currentRequestType = null;
+    let currentDepositFilter = 'all';
+    let currentWithdrawFilter = 'all';
+    let currentDepositSearch = '';
+    let currentWithdrawSearch = '';
+    let currentTab = 'deposit';
+
+    // متغير جديد لمنع التكرار
+    const processingRequests = new Set();
 
     try {
       firebaseApp = firebase.initializeApp(firebaseConfig);
@@ -1212,6 +1482,9 @@
           break;
         case 'warning':
           toastIcon.className = 'fas fa-exclamation-triangle';
+          break;
+        case 'binance':
+          toastIcon.className = 'fab fa-binance';
           break;
       }
       
@@ -1282,6 +1555,48 @@
         case 'other': return 'fas fa-exchange-alt';
         default: return 'fas fa-money-bill-wave';
       }
+    }
+
+    // ========== دالة تعطيل أزرار الإجراء ==========
+    function disableActionButtons() {
+      const buttons = [
+        'approveDepositRequestBtn',
+        'rejectDepositRequestBtn',
+        'cancelDepositActionBtn',
+        'approveWithdrawRequestBtn',
+        'rejectWithdrawRequestBtn',
+        'cancelWithdrawActionBtn'
+      ];
+      
+      buttons.forEach(buttonId => {
+        const button = document.getElementById(buttonId);
+        if (button) {
+          button.disabled = true;
+          button.style.opacity = '0.5';
+          button.style.cursor = 'not-allowed';
+        }
+      });
+    }
+
+    // ========== دالة تمكين أزرار الإجراء ==========
+    function enableActionButtons() {
+      const buttons = [
+        'approveDepositRequestBtn',
+        'rejectDepositRequestBtn',
+        'cancelDepositActionBtn',
+        'approveWithdrawRequestBtn',
+        'rejectWithdrawRequestBtn',
+        'cancelWithdrawActionBtn'
+      ];
+      
+      buttons.forEach(buttonId => {
+        const button = document.getElementById(buttonId);
+        if (button) {
+          button.disabled = false;
+          button.style.opacity = '1';
+          button.style.cursor = 'pointer';
+        }
+      });
     }
 
     // ========== دالة حساب إجمالي أرصدة المستخدمين ==========
@@ -1396,7 +1711,7 @@
         await requestRef.update(updateData);
         
         showToast(`✅ تم ${status === 'approved' ? 'تأكيد' : 'رفض'} الطلب بنجاح`, 'success');
-        closeModal();
+        closeDepositModal();
         
         return true;
       } catch (error) {
@@ -1405,6 +1720,207 @@
         return false;
       } finally {
         hideLoading();
+      }
+    }
+
+    // ========== دالة تحديث حالة طلب السحب (معدلة لمنع التكرار) ==========
+    async function updateWithdrawStatus(requestId, status, adminNotes = '') {
+      try {
+        // التحقق مما إذا كان الطلب قيد المعالجة حالياً
+        if (processingRequests.has(requestId)) {
+          showToast('⚠️ الطلب قيد المعالجة حالياً، الرجاء الانتظار', 'warning');
+          return false;
+        }
+        
+        showLoading();
+        
+        // إضافة الطلب إلى قائمة المعالجة
+        processingRequests.add(requestId);
+        
+        // تعطيل أزرار الإجراء في النافذة
+        disableActionButtons();
+        
+        const requestRef = db.collection('withdraw_requests').doc(requestId);
+        const requestDoc = await requestRef.get();
+        
+        if (!requestDoc.exists) {
+          throw new Error('طلب السحب غير موجود');
+        }
+        
+        const requestData = requestDoc.data();
+        
+        // التحقق من أن الطلب لا يزال في حالة pending
+        if (requestData.status !== 'pending') {
+          throw new Error('تم معالجة هذا الطلب مسبقاً');
+        }
+        
+        if (status === 'approved') {
+          // عند تأكيد السحب
+          const updateData = {
+            status: 'approved',
+            adminNotes: adminNotes || '',
+            approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            processedAt: firebase.firestore.FieldValue.serverTimestamp()
+          };
+          
+          await requestRef.update(updateData);
+          
+          showToast(`✅ تم تأكيد طلب السحب بنجاح`, 'binance');
+          
+        } else if (status === 'rejected') {
+          // التحقق مما إذا كان قد تم استرجاع الأموال مسبقاً
+          if (requestData.refundedAt) {
+            throw new Error('تم استرجاع الأموال مسبقاً لهذا الطلب');
+          }
+          
+          // عند رفض طلب السحب - نعيد المبلغ للمستخدم
+          const userRef = db.collection('users').doc(requestData.userId.toString());
+          
+          // استخدام معاملة لضمان تكامل البيانات
+          await db.runTransaction(async (transaction) => {
+            // جلب بيانات الطلب مرة أخرى للتأكد من الحالة
+            const freshRequestDoc = await transaction.get(requestRef);
+            const freshRequestData = freshRequestDoc.data();
+            
+            if (freshRequestData.status !== 'pending') {
+              throw new Error('تم تغيير حالة الطلب أثناء المعالجة');
+            }
+            
+            if (freshRequestData.refundedAt) {
+              throw new Error('تم استرجاع الأموال مسبقاً');
+            }
+            
+            // جلب بيانات المستخدم الحالية
+            const freshUserDoc = await transaction.get(userRef);
+            const freshUserData = freshUserDoc.data();
+            
+            if (!freshUserData.balances || typeof freshUserData.balances['USDT'] === 'undefined') {
+              throw new Error('رصيد المستخدم غير موجود');
+            }
+            
+            // حساب المبلغ المراد إعادته (المبلغ + الرسوم)
+            const refundAmount = parseFloat(requestData.amount) + parseFloat(requestData.fees || 0);
+            const freshCurrentBalance = parseFloat(freshUserData.balances['USDT']);
+            const freshNewBalance = freshCurrentBalance + refundAmount;
+            
+            // تحديث رصيد المستخدم
+            transaction.update(userRef, {
+              'balances.USDT': freshNewBalance,
+              lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            // تحديث حالة طلب السحب مع وضع علامة الاسترجاع
+            transaction.update(requestRef, {
+              status: 'rejected',
+              adminNotes: adminNotes || '',
+              refundAmount: refundAmount,
+              refundedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              processedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            // تسجيل معاملة الاسترجاع
+            const refundRef = db.collection('refund_transactions').doc();
+            transaction.set(refundRef, {
+              id: refundRef.id,
+              withdrawRequestId: requestId,
+              userId: requestData.userId,
+              userName: requestData.userName,
+              amount: refundAmount,
+              currency: 'USDT',
+              reason: 'رفض طلب السحب',
+              adminNotes: adminNotes || '',
+              timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            // تسجيل معاملة في سجل المستخدم
+            const userTransactionRef = db.collection('users').doc(requestData.userId.toString())
+              .collection('transactions').doc();
+            transaction.set(userTransactionRef, {
+              id: userTransactionRef.id,
+              type: 'refund',
+              amount: refundAmount,
+              currency: 'USDT',
+              description: 'استرجاع رصيد - رفض طلب سحب',
+              withdrawRequestId: requestId,
+              status: 'completed',
+              timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          });
+          
+          // تحديث إجمالي الأرصدة
+          calculateTotalBalance();
+          
+          showToast(`✅ تم رفض طلب السحب وإعادة ${refundAmount.toFixed(2)} USDT إلى رصيد المستخدم`, 'binance');
+        }
+        
+        // إرسال إشعار للمستخدم
+        sendWithdrawNotification(requestId, status, adminNotes);
+        
+        closeWithdrawModal();
+        
+        return true;
+        
+      } catch (error) {
+        console.error(`❌ خطأ في تحديث حالة طلب السحب:`, error);
+        
+        if (error.message.includes('تم معالجة هذا الطلب مسبقاً') || 
+            error.message.includes('تم استرجاع الأموال مسبقاً')) {
+          showToast(`⚠️ ${error.message}`, 'warning');
+        } else {
+          showToast(`❌ خطأ في ${status === 'approved' ? 'تأكيد' : 'رفض'} طلب السحب: ${error.message}`, 'error');
+        }
+        
+        return false;
+        
+      } finally {
+        // إزالة الطلب من قائمة المعالجة
+        processingRequests.delete(requestId);
+        
+        // إعادة تمكين الأزرار
+        enableActionButtons();
+        
+        hideLoading();
+      }
+    }
+
+    async function sendWithdrawNotification(requestId, status, adminNotes = '') {
+      try {
+        if (!db) return;
+        
+        const requestRef = db.collection('withdraw_requests').doc(requestId);
+        const requestDoc = await requestRef.get();
+        
+        if (!requestDoc.exists) return;
+        
+        const requestData = requestDoc.data();
+        
+        const notificationRef = db.collection('notifications').doc();
+        await notificationRef.set({
+          userId: requestData.userId,
+          type: 'withdraw_status_update',
+          title: `تحديث حالة طلب السحب ${requestData.requestId}`,
+          message: status === 'approved' 
+            ? `تم تأكيد طلب السحب الخاص بك بمبلغ ${formatCurrency(requestData.netAmount, requestData.currency)}`
+            : `تم رفض طلب السحب الخاص بمبلغ ${formatCurrency(requestData.amount, requestData.currency)} وتم إعادة الرصيد إلى حسابك`,
+          data: {
+            requestId: requestId,
+            status: status,
+            amount: requestData.amount,
+            netAmount: requestData.netAmount,
+            currency: requestData.currency,
+            adminNotes: adminNotes,
+            timestamp: new Date().toISOString()
+          },
+          read: false,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        console.log('📨 تم إرسال إشعار تحديث حالة السحب للمستخدم');
+        
+      } catch (error) {
+        console.error('❌ خطأ في إرسال إشعار السحب:', error);
       }
     }
 
@@ -1427,10 +1943,6 @@
     function setupRealtimeDepositListener() {
       if (depositRequestsListener) {
         depositRequestsListener();
-      }
-      
-      if (usersListener) {
-        usersListener();
       }
       
       depositRequestsListener = db.collection('deposit_requests')
@@ -1457,46 +1969,77 @@
             if (request.status === 'rejected') stats.rejected++;
           });
           
-          updateStats(stats);
-          renderRequestsList(requests);
+          updateDepositStats(stats);
+          renderDepositRequestsList(requests);
         }, (error) => {
           console.error('❌ خطأ في الاستماع لتحديثات الطلبات:', error);
           showToast('❌ خطأ في تحديث الطلبات', 'error');
         });
-      
-      // الاستماع لتحديثات المستخدمين لتحديث الأرصدة في الوقت الحقيقي
-      usersListener = db.collection('users').onSnapshot(() => {
-        calculateTotalBalance();
-      }, (error) => {
-        console.error('❌ خطأ في الاستماع لتحديثات المستخدمين:', error);
-      });
-      
-      // حساب إجمالي الأرصدة أول مرة
-      calculateTotalBalance();
     }
 
-    function updateStats(stats) {
+    function setupRealtimeWithdrawListener() {
+      if (withdrawRequestsListener) {
+        withdrawRequestsListener();
+      }
+      
+      withdrawRequestsListener = db.collection('withdraw_requests')
+        .orderBy('createdAt', 'desc')
+        .onSnapshot((snapshot) => {
+          const requests = [];
+          const stats = {
+            total: 0,
+            pending: 0,
+            approved: 0,
+            rejected: 0
+          };
+          
+          snapshot.forEach((doc) => {
+            const request = {
+              id: doc.id,
+              ...doc.data()
+            };
+            requests.push(request);
+            
+            stats.total++;
+            if (request.status === 'pending') stats.pending++;
+            if (request.status === 'approved') stats.approved++;
+            if (request.status === 'rejected') stats.rejected++;
+          });
+          
+          updateWithdrawStats(stats);
+          renderWithdrawRequestsList(requests);
+        }, (error) => {
+          console.error('❌ خطأ في الاستماع لتحديثات طلبات السحب:', error);
+          showToast('❌ خطأ في تحديث طلبات السحب', 'error');
+        });
+    }
+
+    function updateDepositStats(stats) {
       // عرض الأرقام بالفرنسية
-      document.getElementById('pendingCount').textContent = formatNumberFrench(stats.pending);
-      document.getElementById('approvedCount').textContent = formatNumberFrench(stats.approved);
-      document.getElementById('rejectedCount').textContent = formatNumberFrench(stats.rejected);
-      document.getElementById('totalCount').textContent = formatNumberFrench(stats.total);
+      document.getElementById('pendingDepositCount').textContent = formatNumberFrench(stats.pending);
+      document.getElementById('approvedDepositCount').textContent = formatNumberFrench(stats.approved);
+      document.getElementById('rejectedDepositCount').textContent = formatNumberFrench(stats.rejected);
     }
 
-    function renderRequestsList(requests) {
-      const requestsList = document.getElementById('requestsList');
+    function updateWithdrawStats(stats) {
+      // عرض الأرقام بالفرنسية
+      document.getElementById('totalWithdrawCount').textContent = formatNumberFrench(stats.total);
+    }
+
+    function renderDepositRequestsList(requests) {
+      const requestsList = document.getElementById('depositRequestsList');
       requestsList.innerHTML = '';
       
       let filteredRequests = requests;
       
       // تطبيق الفلتر
-      if (currentFilter !== 'all') {
-        filteredRequests = filteredRequests.filter(request => request.status === currentFilter);
+      if (currentDepositFilter !== 'all') {
+        filteredRequests = filteredRequests.filter(request => request.status === currentDepositFilter);
       }
       
       // تطبيق البحث
-      if (currentSearch.trim() !== '') {
-        const searchTerm = currentSearch.toLowerCase();
+      if (currentDepositSearch.trim() !== '') {
+        const searchTerm = currentDepositSearch.toLowerCase();
         filteredRequests = filteredRequests.filter(request => 
           request.id.toLowerCase().includes(searchTerm) ||
           (request.userName && request.userName.toLowerCase().includes(searchTerm)) ||
@@ -1512,7 +2055,7 @@
             </div>
             <div class="no-requests-title">لا توجد طلبات</div>
             <div class="no-requests-text">
-              ${currentSearch ? 'لم يتم العثور على طلبات تطابق بحثك' : 'لا توجد طلبات إيداع لعرضها'}
+              ${currentDepositSearch ? 'لم يتم العثور على طلبات تطابق بحثك' : 'لا توجد طلبات إيداع لعرضها'}
             </div>
           </div>
         `;
@@ -1609,18 +2152,18 @@
           </div>
           
           <div class="request-actions">
-            <button class="action-btn view" data-id="${request.id}">
+            <button class="action-btn view" data-id="${request.id}" data-type="deposit">
               <i class="fas fa-eye"></i>
               عرض التفاصيل
             </button>
             
             ${request.status === 'pending' ? `
-              <button class="action-btn approve" data-id="${request.id}">
+              <button class="action-btn approve" data-id="${request.id}" data-type="deposit">
                 <i class="fas fa-check"></i>
                 تأكيد
               </button>
               
-              <button class="action-btn reject" data-id="${request.id}">
+              <button class="action-btn reject" data-id="${request.id}" data-type="deposit">
                 <i class="fas fa-times"></i>
                 رفض
               </button>
@@ -1632,29 +2175,216 @@
       });
       
       // إضافة الأحداث للأزرار
-      document.querySelectorAll('.action-btn.view').forEach(btn => {
+      document.querySelectorAll('.action-btn.view[data-type="deposit"]').forEach(btn => {
         btn.addEventListener('click', function() {
           const requestId = this.getAttribute('data-id');
-          showRequestDetails(requestId);
+          const type = this.getAttribute('data-type');
+          showDepositRequestDetails(requestId, type);
         });
       });
       
-      document.querySelectorAll('.action-btn.approve').forEach(btn => {
+      document.querySelectorAll('.action-btn.approve[data-type="deposit"]').forEach(btn => {
         btn.addEventListener('click', function() {
           const requestId = this.getAttribute('data-id');
-          showRequestDetails(requestId, 'approve');
+          const type = this.getAttribute('data-type');
+          showDepositRequestDetails(requestId, type, 'approve');
         });
       });
       
-      document.querySelectorAll('.action-btn.reject').forEach(btn => {
+      document.querySelectorAll('.action-btn.reject[data-type="deposit"]').forEach(btn => {
         btn.addEventListener('click', function() {
           const requestId = this.getAttribute('data-id');
-          showRequestDetails(requestId, 'reject');
+          const type = this.getAttribute('data-type');
+          showDepositRequestDetails(requestId, type, 'reject');
         });
       });
     }
 
-    async function showRequestDetails(requestId, action = null) {
+    function renderWithdrawRequestsList(requests) {
+      const requestsList = document.getElementById('withdrawRequestsList');
+      requestsList.innerHTML = '';
+      
+      let filteredRequests = requests;
+      
+      // تطبيق الفلتر
+      if (currentWithdrawFilter !== 'all') {
+        filteredRequests = filteredRequests.filter(request => request.status === currentWithdrawFilter);
+      }
+      
+      // تطبيق البحث
+      if (currentWithdrawSearch.trim() !== '') {
+        const searchTerm = currentWithdrawSearch.toLowerCase();
+        filteredRequests = filteredRequests.filter(request => 
+          request.id.toLowerCase().includes(searchTerm) ||
+          (request.userName && request.userName.toLowerCase().includes(searchTerm)) ||
+          (request.binanceId && request.binanceId.toLowerCase().includes(searchTerm)) ||
+          (request.requestId && request.requestId.toLowerCase().includes(searchTerm))
+        );
+      }
+      
+      if (filteredRequests.length === 0) {
+        requestsList.innerHTML = `
+          <div class="no-requests">
+            <div class="no-requests-icon">
+              <i class="fab fa-binance"></i>
+            </div>
+            <div class="no-requests-title">لا توجد طلبات سحب</div>
+            <div class="no-requests-text">
+              ${currentWithdrawSearch ? 'لم يتم العثور على طلبات تطابق بحثك' : 'لا توجد طلبات سحب لعرضها'}
+            </div>
+          </div>
+        `;
+        return;
+      }
+      
+      filteredRequests.forEach(request => {
+        const requestCard = document.createElement('div');
+        requestCard.className = `request-card ${request.status}`;
+        
+        const date = request.createdAt ? formatDate(request.createdAt) : '-';
+        const amountText = formatCurrency(request.amount, request.currency);
+        const feesText = formatCurrency(request.fees, request.currency);
+        const netAmountText = formatCurrency(request.netAmount, request.currency);
+        const statusText = getStatusText(request.status);
+        const statusClass = getStatusClass(request.status);
+        const userInitial = request.userName ? request.userName.charAt(0) : 'م';
+        
+        requestCard.innerHTML = `
+          <div class="request-header">
+            <div class="request-id">
+              <i class="fab fa-binance"></i>
+              ${request.requestId || request.id.substring(0, 8)}...
+            </div>
+            <div class="request-status ${statusClass}">
+              ${statusText}
+            </div>
+          </div>
+          
+          <div class="request-content">
+            <!-- معلومات المستخدم -->
+            <div class="request-info">
+              <div class="info-label">
+                <i class="fas fa-user"></i>
+                المستخدم
+              </div>
+              <div class="info-value info-user">
+                <div class="user-avatar binance">${userInitial}</div>
+                <div class="user-info">
+                  <div class="user-name">${request.userName || 'مستخدم'}</div>
+                  <div class="user-id">ID: ${request.userId}</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- المبلغ -->
+            <div class="request-info">
+              <div class="info-label">
+                <i class="fas fa-money-bill-wave"></i>
+                المبلغ
+              </div>
+              <div class="info-value info-amount">${amountText}</div>
+            </div>
+            
+            <!-- الرسوم -->
+            <div class="request-info">
+              <div class="info-label">
+                <i class="fas fa-percentage"></i>
+                الرسوم
+              </div>
+              <div class="info-value">${feesText}</div>
+            </div>
+            
+            <!-- المبلغ الصافي -->
+            <div class="request-info">
+              <div class="info-label">
+                <i class="fas fa-coins"></i>
+                المبلغ الصافي
+              </div>
+              <div class="info-value">${netAmountText}</div>
+            </div>
+            
+            <!-- معرف Binance -->
+            <div class="request-info">
+              <div class="info-label">
+                <i class="fab fa-binance"></i>
+                معرف Binance
+              </div>
+              <div class="info-value" style="font-family: 'Courier New', monospace; font-size: 14px;">
+                ${request.binanceId}
+              </div>
+            </div>
+            
+            <!-- التاريخ -->
+            <div class="request-info">
+              <div class="info-label">
+                <i class="fas fa-calendar"></i>
+                تاريخ الطلب
+              </div>
+              <div class="info-value">${date}</div>
+            </div>
+            
+            <!-- ملاحظات المسؤول -->
+            <div class="request-info">
+              <div class="info-label">
+                <i class="fas fa-sticky-note"></i>
+                ملاحظات المسؤول
+              </div>
+              <div class="info-value">
+                ${request.adminNotes ? request.adminNotes.substring(0, 50) + (request.adminNotes.length > 50 ? '...' : '') : 'لا توجد'}
+              </div>
+            </div>
+          </div>
+          
+          <div class="request-actions">
+            <button class="action-btn view binance" data-id="${request.id}" data-type="withdraw">
+              <i class="fas fa-eye"></i>
+              عرض التفاصيل
+            </button>
+            
+            ${request.status === 'pending' ? `
+              <button class="action-btn approve" data-id="${request.id}" data-type="withdraw">
+                <i class="fas fa-check"></i>
+                تأكيد
+              </button>
+              
+              <button class="action-btn reject" data-id="${request.id}" data-type="withdraw">
+                <i class="fas fa-times"></i>
+                رفض
+              </button>
+            ` : ''}
+          </div>
+        `;
+        
+        requestsList.appendChild(requestCard);
+      });
+      
+      // إضافة الأحداث للأزرار
+      document.querySelectorAll('.action-btn.view[data-type="withdraw"]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const requestId = this.getAttribute('data-id');
+          const type = this.getAttribute('data-type');
+          showWithdrawRequestDetails(requestId, type);
+        });
+      });
+      
+      document.querySelectorAll('.action-btn.approve[data-type="withdraw"]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const requestId = this.getAttribute('data-id');
+          const type = this.getAttribute('data-type');
+          showWithdrawRequestDetails(requestId, type, 'approve');
+        });
+      });
+      
+      document.querySelectorAll('.action-btn.reject[data-type="withdraw"]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const requestId = this.getAttribute('data-id');
+          const type = this.getAttribute('data-type');
+          showWithdrawRequestDetails(requestId, type, 'reject');
+        });
+      });
+    }
+
+    async function showDepositRequestDetails(requestId, type, action = null) {
       try {
         showLoading();
         
@@ -1667,51 +2397,52 @@
         
         const requestData = requestDoc.data();
         currentRequestId = requestId;
+        currentRequestType = type;
         
         // تعبئة البيانات
-        document.getElementById('modalRequestId').textContent = requestId.substring(0, 12) + '...';
-        document.getElementById('modalUserName').textContent = requestData.userName || 'مستخدم';
-        document.getElementById('modalUserId').textContent = requestData.userId;
-        document.getElementById('modalAmount').textContent = formatCurrency(requestData.amount, requestData.currency);
-        document.getElementById('modalTransferType').textContent = getTransferTypeText(requestData.transferType);
-        document.getElementById('modalTransactionNumber').textContent = requestData.transactionNumber;
-        document.getElementById('modalUserNotes').textContent = requestData.notes || 'لا توجد';
-        document.getElementById('modalCreatedAt').textContent = formatDate(requestData.createdAt);
-        document.getElementById('modalUpdatedAt').textContent = formatDate(requestData.updatedAt);
+        document.getElementById('depositModalRequestId').textContent = requestId.substring(0, 12) + '...';
+        document.getElementById('depositModalUserName').textContent = requestData.userName || 'مستخدم';
+        document.getElementById('depositModalUserId').textContent = requestData.userId;
+        document.getElementById('depositModalAmount').textContent = formatCurrency(requestData.amount, requestData.currency);
+        document.getElementById('depositModalTransferType').textContent = getTransferTypeText(requestData.transferType);
+        document.getElementById('depositModalTransactionNumber').textContent = requestData.transactionNumber;
+        document.getElementById('depositModalUserNotes').textContent = requestData.notes || 'لا توجد';
+        document.getElementById('depositModalCreatedAt').textContent = formatDate(requestData.createdAt);
+        document.getElementById('depositModalUpdatedAt').textContent = formatDate(requestData.updatedAt);
         
         // تحديث الحالة
-        const statusElement = document.getElementById('modalStatus');
+        const statusElement = document.getElementById('depositModalStatus');
         statusElement.textContent = getStatusText(requestData.status);
         statusElement.className = `status-badge ${getStatusClass(requestData.status)}`;
         
         // عرض ملاحظات المسؤول إذا كانت موجودة
         if (requestData.adminNotes) {
-          document.getElementById('adminNotesSection').style.display = 'block';
-          document.getElementById('modalAdminNotes').textContent = requestData.adminNotes;
+          document.getElementById('depositAdminNotesSection').style.display = 'block';
+          document.getElementById('depositModalAdminNotes').textContent = requestData.adminNotes;
         } else {
-          document.getElementById('adminNotesSection').style.display = 'none';
+          document.getElementById('depositAdminNotesSection').style.display = 'none';
         }
         
         // التحكم في عرض نموذج الإجراء
-        const actionForm = document.getElementById('actionForm');
+        const actionForm = document.getElementById('depositActionForm');
         if (requestData.status === 'pending' && action) {
           actionForm.style.display = 'block';
-          document.getElementById('adminNotesInput').value = '';
+          document.getElementById('depositAdminNotesInput').value = '';
           
           // إخفاء الزر المناسب حسب الإجراء
           if (action === 'approve') {
-            document.getElementById('rejectRequestBtn').style.display = 'flex';
-            document.getElementById('approveRequestBtn').style.display = 'flex';
+            document.getElementById('rejectDepositRequestBtn').style.display = 'flex';
+            document.getElementById('approveDepositRequestBtn').style.display = 'flex';
           } else if (action === 'reject') {
-            document.getElementById('rejectRequestBtn').style.display = 'flex';
-            document.getElementById('approveRequestBtn').style.display = 'flex';
+            document.getElementById('rejectDepositRequestBtn').style.display = 'flex';
+            document.getElementById('approveDepositRequestBtn').style.display = 'flex';
           }
         } else {
           actionForm.style.display = 'none';
         }
         
         hideLoading();
-        openModal();
+        openDepositModal();
         
       } catch (error) {
         console.error('❌ خطأ في عرض تفاصيل الطلب:', error);
@@ -1720,15 +2451,95 @@
       }
     }
 
-    // ========== دوال التحكم في النوافذ ==========
-    function openModal() {
-      document.getElementById('requestModal').style.display = 'flex';
+    async function showWithdrawRequestDetails(requestId, type, action = null) {
+      try {
+        showLoading();
+        
+        const requestRef = db.collection('withdraw_requests').doc(requestId);
+        const requestDoc = await requestRef.get();
+        
+        if (!requestDoc.exists) {
+          throw new Error('طلب السحب غير موجود');
+        }
+        
+        const requestData = requestDoc.data();
+        
+        // التحقق مما إذا كان الطلب قيد المعالجة
+        if (processingRequests.has(requestId)) {
+          showToast('⚠️ هذا الطلب قيد المعالجة حالياً. الرجاء الانتظار حتى تكتمل العملية.', 'warning');
+          hideLoading();
+          return;
+        }
+        
+        currentRequestId = requestId;
+        currentRequestType = type;
+        
+        // تعبئة البيانات
+        document.getElementById('withdrawModalRequestId').textContent = requestData.requestId || requestId.substring(0, 12) + '...';
+        document.getElementById('withdrawModalUserName').textContent = requestData.userName || 'مستخدم';
+        document.getElementById('withdrawModalUserId').textContent = requestData.userId;
+        document.getElementById('withdrawModalAmount').textContent = formatCurrency(requestData.amount, requestData.currency);
+        document.getElementById('withdrawModalFees').textContent = formatCurrency(requestData.fees, requestData.currency);
+        document.getElementById('withdrawModalNetAmount').textContent = formatCurrency(requestData.netAmount, requestData.currency);
+        document.getElementById('withdrawModalBinanceId').textContent = requestData.binanceId;
+        document.getElementById('withdrawModalCreatedAt').textContent = formatDate(requestData.createdAt);
+        document.getElementById('withdrawModalUpdatedAt').textContent = formatDate(requestData.updatedAt);
+        document.getElementById('withdrawModalAdminNotes').textContent = requestData.adminNotes || 'لا توجد';
+        
+        // تحديث الحالة
+        const statusElement = document.getElementById('withdrawModalStatus');
+        statusElement.textContent = getStatusText(requestData.status);
+        statusElement.className = `status-badge ${getStatusClass(requestData.status)}`;
+        
+        // التحكم في عرض نموذج الإجراء
+        const actionForm = document.getElementById('withdrawActionForm');
+        if (requestData.status === 'pending' && action) {
+          actionForm.style.display = 'block';
+          document.getElementById('withdrawAdminNotesInput').value = '';
+          
+          // إخفاء الزر المناسب حسب الإجراء
+          if (action === 'approve') {
+            document.getElementById('rejectWithdrawRequestBtn').style.display = 'flex';
+            document.getElementById('approveWithdrawRequestBtn').style.display = 'flex';
+          } else if (action === 'reject') {
+            document.getElementById('rejectWithdrawRequestBtn').style.display = 'flex';
+            document.getElementById('approveWithdrawRequestBtn').style.display = 'flex';
+          }
+        } else {
+          actionForm.style.display = 'none';
+        }
+        
+        hideLoading();
+        openWithdrawModal();
+        
+      } catch (error) {
+        console.error('❌ خطأ في عرض تفاصيل طلب السحب:', error);
+        showToast('❌ خطأ في عرض التفاصيل', 'error');
+        hideLoading();
+      }
     }
 
-    function closeModal() {
-      document.getElementById('requestModal').style.display = 'none';
+    // ========== دوال التحكم في النوافذ ==========
+    function openDepositModal() {
+      document.getElementById('depositRequestModal').style.display = 'flex';
+    }
+
+    function closeDepositModal() {
+      document.getElementById('depositRequestModal').style.display = 'none';
       currentRequestId = null;
-      document.getElementById('adminNotesInput').value = '';
+      currentRequestType = null;
+      document.getElementById('depositAdminNotesInput').value = '';
+    }
+
+    function openWithdrawModal() {
+      document.getElementById('withdrawRequestModal').style.display = 'flex';
+    }
+
+    function closeWithdrawModal() {
+      document.getElementById('withdrawRequestModal').style.display = 'none';
+      currentRequestId = null;
+      currentRequestType = null;
+      document.getElementById('withdrawAdminNotesInput').value = '';
     }
 
     // ========== دوال تسجيل الدخول ==========
@@ -1749,6 +2560,10 @@
         
         // إعداد الاستماع للطلبات
         setupRealtimeDepositListener();
+        setupRealtimeWithdrawListener();
+        
+        // حساب إجمالي الأرصدة
+        calculateTotalBalance();
         
         showToast('✅ تم تسجيل الدخول بنجاح', 'success');
       } else {
@@ -1773,6 +2588,8 @@
         document.getElementById('loginContainer').style.display = 'none';
         document.getElementById('adminContainer').style.display = 'block';
         setupRealtimeDepositListener();
+        setupRealtimeWithdrawListener();
+        calculateTotalBalance();
       } else {
         document.getElementById('loginContainer').style.display = 'flex';
         document.getElementById('adminContainer').style.display = 'none';
@@ -1787,15 +2604,44 @@
       // أحداث تسجيل الخروج
       document.getElementById('logoutBtn').addEventListener('click', logout);
       
-      // أحداث الفلاتر
-      document.querySelectorAll('.filter-btn').forEach(button => {
+      // أحداث التبويبات
+      document.querySelectorAll('.tab-btn').forEach(button => {
         button.addEventListener('click', function() {
-          document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-          this.classList.add('active');
-          currentFilter = this.getAttribute('data-filter');
+          const tabId = this.getAttribute('data-tab');
           
-          // إعادة تحميل الطلبات مع الفلتر الجديد
+          // تحديث التبويب النشط
+          document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          
+          // تحديث المحتوى المرئي
+          document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+          document.getElementById(`${tabId}Tab`).classList.add('active');
+          
+          currentTab = tabId;
+        });
+      });
+      
+      // أحداث الفلاتر لطلبات الإيداع
+      document.querySelectorAll('.filter-btn[data-type="deposit"]').forEach(button => {
+        button.addEventListener('click', function() {
+          document.querySelectorAll('.filter-btn[data-type="deposit"]').forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          currentDepositFilter = this.getAttribute('data-filter');
+          
+          // إعادة تحميل طلبات الإيداع مع الفلتر الجديد
           setupRealtimeDepositListener();
+        });
+      });
+      
+      // أحداث الفلاتر لطلبات السحب
+      document.querySelectorAll('.filter-btn[data-type="withdraw"]').forEach(button => {
+        button.addEventListener('click', function() {
+          document.querySelectorAll('.filter-btn[data-type="withdraw"]').forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          currentWithdrawFilter = this.getAttribute('data-filter');
+          
+          // إعادة تحميل طلبات السحب مع الفلتر الجديد
+          setupRealtimeWithdrawListener();
         });
       });
       
@@ -1805,38 +2651,149 @@
         showToast('🔄 جاري تحديث الأرصدة...', 'info');
       });
       
-      // حدث البحث
-      document.getElementById('searchInput').addEventListener('input', function() {
-        currentSearch = this.value;
+      // حدث البحث في طلبات الإيداع
+      document.getElementById('depositSearchInput').addEventListener('input', function() {
+        currentDepositSearch = this.value;
         setupRealtimeDepositListener();
       });
       
-      // أحداث النافذة المنبثقة
-      document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-      document.getElementById('cancelActionBtn').addEventListener('click', closeModal);
+      // حدث البحث في طلبات السحب
+      document.getElementById('withdrawSearchInput').addEventListener('input', function() {
+        currentWithdrawSearch = this.value;
+        setupRealtimeWithdrawListener();
+      });
       
-      document.getElementById('approveRequestBtn').addEventListener('click', function() {
+      // أحداث نافذة تفاصيل طلب الإيداع
+      document.getElementById('closeDepositModalBtn').addEventListener('click', closeDepositModal);
+      document.getElementById('cancelDepositActionBtn').addEventListener('click', closeDepositModal);
+      
+      document.getElementById('approveDepositRequestBtn').addEventListener('click', function() {
         if (!currentRequestId) return;
         
-        const adminNotes = document.getElementById('adminNotesInput').value.trim();
+        const adminNotes = document.getElementById('depositAdminNotesInput').value.trim();
         if (confirm('هل أنت متأكد من تأكيد هذا الطلب؟ سيتم إضافة الرصيد للمستخدم تلقائياً.')) {
           updateDepositStatus(currentRequestId, 'approved', adminNotes);
         }
       });
       
-      document.getElementById('rejectRequestBtn').addEventListener('click', function() {
+      document.getElementById('rejectDepositRequestBtn').addEventListener('click', function() {
         if (!currentRequestId) return;
         
-        const adminNotes = document.getElementById('adminNotesInput').value.trim();
+        const adminNotes = document.getElementById('depositAdminNotesInput').value.trim();
         if (confirm('هل أنت متأكد من رفض هذا الطلب؟')) {
           updateDepositStatus(currentRequestId, 'rejected', adminNotes);
         }
       });
       
-      // إغلاق النافذة بالنقر خارجها
-      document.getElementById('requestModal').addEventListener('click', function(e) {
+      // أحداث نافذة تفاصيل طلب السحب
+      document.getElementById('closeWithdrawModalBtn').addEventListener('click', closeWithdrawModal);
+      document.getElementById('cancelWithdrawActionBtn').addEventListener('click', closeWithdrawModal);
+      
+      document.getElementById('approveWithdrawRequestBtn').addEventListener('click', async function() {
+        if (!currentRequestId) return;
+        
+        const adminNotes = document.getElementById('withdrawAdminNotesInput').value.trim();
+        
+        if (confirm(`هل أنت متأكد من تأكيد طلب السحب هذا؟
+        
+✅ سيتم تأكيد عملية السحب إلى Binance.
+✅ لن يتم خصم أي مبلغ من حساب النظام.
+✅ المسؤول مسؤول عن تحويل المبلغ يدوياً إلى حساب Binance الخاص بالمستخدم.`)) {
+          
+          // التحقق مرة أخرى من الحالة
+          try {
+            const requestRef = db.collection('withdraw_requests').doc(currentRequestId);
+            const requestDoc = await requestRef.get();
+            
+            if (!requestDoc.exists) {
+              alert('طلب السحب غير موجود!');
+              return;
+            }
+            
+            const requestData = requestDoc.data();
+            
+            if (requestData.status !== 'pending') {
+              alert('تم معالجة هذا الطلب مسبقاً!');
+              closeWithdrawModal();
+              return;
+            }
+            
+            // تنفيذ التأكيد
+            updateWithdrawStatus(currentRequestId, 'approved', adminNotes);
+            
+          } catch (error) {
+            console.error('❌ خطأ في التحقق من حالة الطلب:', error);
+            showToast('❌ خطأ في التحقق من حالة الطلب', 'error');
+          }
+        }
+      });
+      
+      document.getElementById('rejectWithdrawRequestBtn').addEventListener('click', async function() {
+        if (!currentRequestId) return;
+        
+        const adminNotes = document.getElementById('withdrawAdminNotesInput').value.trim();
+        
+        // الحصول على بيانات الطلب لعرض المبلغ
+        try {
+          const requestRef = db.collection('withdraw_requests').doc(currentRequestId);
+          const requestDoc = await requestRef.get();
+          
+          if (!requestDoc.exists) {
+            alert('طلب السحب غير موجود!');
+            return;
+          }
+          
+          const requestData = requestDoc.data();
+          
+          if (requestData.status !== 'pending') {
+            alert('تم معالجة هذا الطلب مسبقاً!');
+            closeWithdrawModal();
+            return;
+          }
+          
+          const refundAmount = parseFloat(requestData.amount) + parseFloat(requestData.fees || 0);
+          
+          if (confirm(`⚠️  تنبيه مهم!
+          
+هل أنت متأكد من رفض طلب السحب هذا؟
+
+✅ سيتم إعادة المبلغ الكامل للمستخدم:
+   المبلغ: ${formatCurrency(requestData.amount, requestData.currency)}
+   الرسوم: ${formatCurrency(requestData.fees, requestData.currency)}
+   الإجمالي: ${formatCurrency(refundAmount, requestData.currency)}
+
+✅ سيتم إضافة المبلغ إلى رصيد USDT الخاص بالمستخدم.
+✅ لن يتم تنفيذ عملية سحب إلى Binance.`)) {
+            
+            // التحقق مرة أخرى قبل التنفيذ
+            const recheckDoc = await requestRef.get();
+            const recheckData = recheckDoc.data();
+            
+            if (recheckData.status !== 'pending') {
+              alert('تم تغيير حالة الطلب! الرجاء تحديث الصفحة.');
+              return;
+            }
+            
+            // تنفيذ الرفض
+            updateWithdrawStatus(currentRequestId, 'rejected', adminNotes);
+          }
+          
+        } catch (error) {
+          console.error('❌ خطأ في التحقق من بيانات الطلب:', error);
+          showToast('❌ خطأ في التحقق من بيانات الطلب', 'error');
+        }
+      });
+      
+      // إغلاق النوافذ بالنقر خارجها
+      document.getElementById('depositRequestModal').addEventListener('click', function(e) {
         if (e.target === this) {
-          closeModal();
+          closeDepositModal();
+        }
+      });
+      
+      document.getElementById('withdrawRequestModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeWithdrawModal();
         }
       });
     });
