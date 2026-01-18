@@ -524,6 +524,27 @@
       max-width: 60%;
       overflow: hidden;
       text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      padding: 2px 5px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    .detail-value:hover {
+      background-color: rgba(0, 102, 51, 0.05);
+    }
+
+    .detail-value .copy-icon {
+      opacity: 0.6;
+      font-size: 12px;
+      transition: opacity 0.2s;
+    }
+
+    .detail-value:hover .copy-icon {
+      opacity: 1;
     }
 
     .detail-amount {
@@ -1829,12 +1850,18 @@
       <div class="modal-body">
         <div class="detail-row">
           <span class="detail-label">رقم الطلب:</span>
-          <span class="detail-value" id="depositModalRequestId">-</span>
+          <span class="detail-value" id="depositModalRequestId" data-copy-text="">
+            <span id="depositModalRequestIdText">-</span>
+            <i class="fas fa-copy copy-icon"></i>
+          </span>
         </div>
         
         <div class="detail-row">
           <span class="detail-label">معرف المستخدم:</span>
-          <span class="detail-value" id="depositModalUserId">-</span>
+          <span class="detail-value" id="depositModalUserId" data-copy-text="">
+            <span id="depositModalUserIdText">-</span>
+            <i class="fas fa-copy copy-icon"></i>
+          </span>
         </div>
         
         <div class="detail-row">
@@ -1849,7 +1876,10 @@
         
         <div class="detail-row">
           <span class="detail-label">رقم العملية:</span>
-          <span class="detail-value" id="depositModalTransactionNumber">-</span>
+          <span class="detail-value" id="depositModalTransactionNumber" data-copy-text="">
+            <span id="depositModalTransactionNumberText">-</span>
+            <i class="fas fa-copy copy-icon"></i>
+          </span>
         </div>
         
         <div class="detail-row">
@@ -1897,12 +1927,18 @@
       <div class="modal-body">
         <div class="detail-row">
           <span class="detail-label">رقم الطلب:</span>
-          <span class="detail-value" id="withdrawModalRequestId">-</span>
+          <span class="detail-value" id="withdrawModalRequestId" data-copy-text="">
+            <span id="withdrawModalRequestIdText">-</span>
+            <i class="fas fa-copy copy-icon"></i>
+          </span>
         </div>
         
         <div class="detail-row">
           <span class="detail-label">معرف المستخدم:</span>
-          <span class="detail-value" id="withdrawModalUserId">-</span>
+          <span class="detail-value" id="withdrawModalUserId" data-copy-text="">
+            <span id="withdrawModalUserIdText">-</span>
+            <i class="fas fa-copy copy-icon"></i>
+          </span>
         </div>
         
         <div class="detail-row">
@@ -1917,7 +1953,10 @@
         
         <div class="detail-row">
           <span class="detail-label">معرف Binance:</span>
-          <span class="detail-value" id="withdrawModalBinanceId">-</span>
+          <span class="detail-value" id="withdrawModalBinanceId" data-copy-text="">
+            <span id="withdrawModalBinanceIdText">-</span>
+            <i class="fas fa-copy copy-icon"></i>
+          </span>
         </div>
         
         <div class="detail-row">
@@ -2161,6 +2200,31 @@
           button.style.cursor = 'pointer';
         }
       });
+    }
+
+    // ========== دالة النسخ إلى الحافظة ==========
+    function copyToClipboard(text) {
+      // إنشاء عنصر نصي مؤقت
+      const tempInput = document.createElement('textarea');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      
+      // تحديد النص
+      tempInput.select();
+      tempInput.setSelectionRange(0, 99999); // للأجهزة المحمولة
+      
+      // نسخ النص
+      let success = false;
+      try {
+        success = document.execCommand('copy');
+      } catch (err) {
+        console.error('❌ فشل النسخ:', err);
+      }
+      
+      // إزالة العنصر المؤقت
+      document.body.removeChild(tempInput);
+      
+      return success;
     }
 
     // ========== دالة حساب إجمالي أرصدة المستخدمين ==========
@@ -3344,11 +3408,22 @@
         currentRequestType = type;
         
         // تعبئة البيانات
-        document.getElementById('depositModalRequestId').textContent = requestId.substring(0, 12) + '...';
-        document.getElementById('depositModalUserId').textContent = requestData.userId;
+        const requestIdText = requestId.substring(0, 12) + '...';
+        const userIdText = requestData.userId;
+        const transactionNumberText = requestData.transactionNumber;
+        
+        document.getElementById('depositModalRequestIdText').textContent = requestIdText;
+        document.getElementById('depositModalRequestId').setAttribute('data-copy-text', requestId);
+        
+        document.getElementById('depositModalUserIdText').textContent = userIdText;
+        document.getElementById('depositModalUserId').setAttribute('data-copy-text', userIdText);
+        
         document.getElementById('depositModalAmount').textContent = formatCurrency(requestData.amount, requestData.currency);
         document.getElementById('depositModalTransferType').textContent = getTransferTypeText(requestData.transferType);
-        document.getElementById('depositModalTransactionNumber').textContent = requestData.transactionNumber;
+        
+        document.getElementById('depositModalTransactionNumberText').textContent = transactionNumberText;
+        document.getElementById('depositModalTransactionNumber').setAttribute('data-copy-text', transactionNumberText);
+        
         document.getElementById('depositModalCreatedAt').textContent = formatDate(requestData.createdAt);
         
         // تحديث الحالة
@@ -3407,11 +3482,22 @@
         currentRequestType = type;
         
         // تعبئة البيانات
-        document.getElementById('withdrawModalRequestId').textContent = requestData.requestId || requestId.substring(0, 12) + '...';
-        document.getElementById('withdrawModalUserId').textContent = requestData.userId;
+        const requestIdText = requestData.requestId || requestId.substring(0, 12) + '...';
+        const userIdText = requestData.userId;
+        const binanceIdText = requestData.binanceId;
+        
+        document.getElementById('withdrawModalRequestIdText').textContent = requestIdText;
+        document.getElementById('withdrawModalRequestId').setAttribute('data-copy-text', requestIdText);
+        
+        document.getElementById('withdrawModalUserIdText').textContent = userIdText;
+        document.getElementById('withdrawModalUserId').setAttribute('data-copy-text', userIdText);
+        
         document.getElementById('withdrawModalAmount').textContent = formatCurrency(requestData.amount, requestData.currency);
         document.getElementById('withdrawModalFees').textContent = formatCurrency(requestData.fees, requestData.currency);
-        document.getElementById('withdrawModalBinanceId').textContent = requestData.binanceId;
+        
+        document.getElementById('withdrawModalBinanceIdText').textContent = binanceIdText;
+        document.getElementById('withdrawModalBinanceId').setAttribute('data-copy-text', binanceIdText);
+        
         document.getElementById('withdrawModalCreatedAt').textContent = formatDate(requestData.createdAt);
         
         // تحديث الحالة
@@ -3729,6 +3815,21 @@
       }
     }
 
+    // ========== معالجة النسخ عند النقر ==========
+    function handleCopyClick(event) {
+      const copyElement = event.target.closest('.detail-value[data-copy-text]');
+      if (!copyElement) return;
+      
+      const textToCopy = copyElement.getAttribute('data-copy-text');
+      if (!textToCopy) return;
+      
+      if (copyToClipboard(textToCopy)) {
+        showToast('تم نسخ النص إلى الحافظة', 'success');
+      } else {
+        showToast('فشل نسخ النص', 'error');
+      }
+    }
+
     // ========== دوال تسجيل الدخول ==========
     function login() {
       const username = document.getElementById('usernameInput').value.trim();
@@ -3786,6 +3887,12 @@
       document.addEventListener('click', function(e) {
         if (e.target.closest('.card-btn')) {
           handleCardButtonClick(e);
+        }
+        
+        // إضافة مستمع لأحداث النسخ
+        if (e.target.closest('.detail-value[data-copy-text]') || 
+            e.target.closest('.detail-value[data-copy-text] .copy-icon')) {
+          handleCopyClick(e);
         }
       });
       
