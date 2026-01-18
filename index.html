@@ -1009,7 +1009,7 @@
       border-color: #F0B90B;
     }
 
-    /* قائمة الطلبات العمودية */
+    /* قائمة الطلبات - العرض الجديد 500x200 */
     .requests-list-container {
       background: white;
       border-radius: 12px;
@@ -1028,9 +1028,9 @@
     }
 
     .requests-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+      gap: 15px;
     }
 
     .request-card {
@@ -1041,6 +1041,13 @@
       transition: all 0.3s;
       border: 1px solid var(--border);
       position: relative;
+      width: 500px;
+      height: 200px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
     }
 
     .request-card:hover {
@@ -1060,13 +1067,11 @@
       border-left-color: var(--danger);
     }
 
-    .request-header {
+    .request-card .card-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
+      align-items: center;
+      margin-bottom: 10px;
     }
 
     .request-id {
@@ -1104,139 +1109,89 @@
       border: 1px solid rgba(244, 67, 54, 0.2);
     }
 
-    .request-content {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .request-info {
-      background: white;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-    }
-
-    .info-label {
-      font-size: 11px;
-      color: var(--gray);
-      margin-bottom: 6px;
+    .request-card .card-body {
+      flex: 1;
       display: flex;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      gap: 6px;
-    }
-
-    .info-value {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--dark);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      direction: ltr;
-      text-align: left;
+      padding: 10px 0;
     }
 
     .info-amount {
-      font-size: 18px;
+      font-size: 24px;
       font-weight: 700;
       color: var(--primary);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       direction: ltr;
-      text-align: left;
+      margin-bottom: 10px;
     }
 
-    .info-user {
+    .info-transaction {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--dark);
+      text-align: center;
       display: flex;
       align-items: center;
       gap: 8px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      direction: ltr;
     }
 
-    .user-avatar {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: 50%;
+    .request-card .card-footer {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 700;
-      font-size: 13px;
-      flex-shrink: 0;
-    }
-
-    .user-avatar.binance {
-      background: linear-gradient(135deg, #F0B90B, #F0D90B);
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
     }
 
     .user-info {
       display: flex;
-      flex-direction: column;
-      overflow: hidden;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
     }
 
-    .user-name {
-      font-weight: 700;
-      font-size: 14px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .user-id {
-      font-size: 11px;
-      color: var(--gray);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      direction: ltr;
-      text-align: left;
-    }
-
-    .request-actions {
+    /* أزرار الإجراءات في البطاقات */
+    .card-actions {
       display: flex;
       gap: 8px;
-      margin-top: 15px;
-      padding-top: 15px;
-      border-top: 1px solid var(--border);
     }
 
-    .action-btn {
-      padding: 8px 15px;
+    .card-btn {
+      padding: 6px 12px;
       border: none;
       border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
       font-size: 12px;
-      transition: all 0.3s;
+      font-weight: 600;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      flex: 1;
-      justify-content: center;
+      gap: 4px;
+      transition: all 0.3s;
     }
 
-    .action-btn.view {
-      background: linear-gradient(135deg, var(--info), #4299e1);
+    .card-btn.approve {
+      background: var(--success);
       color: white;
     }
 
-    .action-btn.approve {
-      background: linear-gradient(135deg, var(--success), #22c55e);
+    .card-btn.reject {
+      background: var(--danger);
       color: white;
     }
 
-    .action-btn.reject {
-      background: linear-gradient(135deg, var(--danger), #ff6b6b);
-      color: white;
-    }
-
-    .action-btn.binance {
-      background: linear-gradient(135deg, #F0B90B, #F0D90B);
-      color: #1E2026;
-    }
-
-    .action-btn:hover {
+    .card-btn:hover {
+      opacity: 0.9;
       transform: translateY(-1px);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+
+    .card-btn:active {
+      transform: translateY(0);
     }
 
     /* البحث */
@@ -1274,6 +1229,7 @@
       text-align: center;
       padding: 40px 15px;
       color: var(--gray);
+      grid-column: 1 / -1;
     }
 
     .no-requests-icon {
@@ -1324,28 +1280,19 @@
         margin: 10px;
       }
       
-      .request-content {
+      .requests-list {
         grid-template-columns: 1fr;
       }
       
-      .request-actions {
-        flex-direction: column;
-      }
-      
-      .filter-buttons {
-        justify-content: center;
+      .request-card {
+        width: 100%;
+        height: 180px;
       }
       
       .toast {
         left: 15px;
         right: 15px;
         bottom: 15px;
-      }
-      
-      .request-header {
-        flex-direction: column;
-        gap: 8px;
-        align-items: flex-start;
       }
       
       .withdraws-full-content {
@@ -1397,6 +1344,24 @@
       
       .balance-value {
         font-size: 20px;
+      }
+      
+      .request-card {
+        height: 160px;
+        padding: 12px;
+      }
+      
+      .info-amount {
+        font-size: 20px;
+      }
+      
+      .info-transaction {
+        font-size: 14px;
+      }
+      
+      .card-btn {
+        padding: 4px 8px;
+        font-size: 11px;
       }
     }
   </style>
@@ -1868,11 +1833,6 @@
         </div>
         
         <div class="detail-row">
-          <span class="detail-label">اسم المستخدم:</span>
-          <span class="detail-value" id="depositModalUserName">-</span>
-        </div>
-        
-        <div class="detail-row">
           <span class="detail-label">معرف المستخدم:</span>
           <span class="detail-value" id="depositModalUserId">-</span>
         </div>
@@ -1893,18 +1853,8 @@
         </div>
         
         <div class="detail-row">
-          <span class="detail-label">ملاحظات المستخدم:</span>
-          <span class="detail-value" id="depositModalUserNotes">لا توجد</span>
-        </div>
-        
-        <div class="detail-row">
           <span class="detail-label">تاريخ الطلب:</span>
           <span class="detail-value" id="depositModalCreatedAt">-</span>
-        </div>
-        
-        <div class="detail-row">
-          <span class="detail-label">آخر تحديث:</span>
-          <span class="detail-value" id="depositModalUpdatedAt">-</span>
         </div>
         
         <div class="detail-row">
@@ -1912,22 +1862,8 @@
           <span id="depositModalStatus" class="status-badge">-</span>
         </div>
         
-        <!-- ملاحظات المسؤول (إذا كانت موجودة) -->
-        <div id="depositAdminNotesSection" style="display: none; margin-top: 15px; padding: 12px; background: var(--light); border-radius: 8px;">
-          <div class="detail-label" style="margin-bottom: 8px;">ملاحظات المسؤول:</div>
-          <div id="depositModalAdminNotes" style="color: var(--dark);"></div>
-        </div>
-        
         <!-- نموذج الإجراء (يظهر فقط للطلبات pending) -->
         <div id="depositActionForm" class="action-form">
-          <div class="form-group">
-            <label for="depositAdminNotesInput" class="form-label">
-              <i class="fas fa-sticky-note"></i>
-              ملاحظات المسؤول (اختياري)
-            </label>
-            <textarea id="depositAdminNotesInput" class="form-textarea" placeholder="أدخل ملاحظاتك هنا..."></textarea>
-          </div>
-          
           <div class="modal-actions">
             <button id="cancelDepositActionBtn" class="modal-btn cancel">
               <i class="fas fa-times"></i>
@@ -1965,11 +1901,6 @@
         </div>
         
         <div class="detail-row">
-          <span class="detail-label">اسم المستخدم:</span>
-          <span class="detail-value" id="withdrawModalUserName">-</span>
-        </div>
-        
-        <div class="detail-row">
           <span class="detail-label">معرف المستخدم:</span>
           <span class="detail-value" id="withdrawModalUserId">-</span>
         </div>
@@ -1985,11 +1916,6 @@
         </div>
         
         <div class="detail-row">
-          <span class="detail-label">المبلغ الصافي:</span>
-          <span class="detail-amount" id="withdrawModalNetAmount">-</span>
-        </div>
-        
-        <div class="detail-row">
           <span class="detail-label">معرف Binance:</span>
           <span class="detail-value" id="withdrawModalBinanceId">-</span>
         </div>
@@ -2000,30 +1926,12 @@
         </div>
         
         <div class="detail-row">
-          <span class="detail-label">آخر تحديث:</span>
-          <span class="detail-value" id="withdrawModalUpdatedAt">-</span>
-        </div>
-        
-        <div class="detail-row">
-          <span class="detail-label">ملاحظات المسؤول:</span>
-          <span class="detail-value" id="withdrawModalAdminNotes">لا توجد</span>
-        </div>
-        
-        <div class="detail-row">
           <span class="detail-label">الحالة الحالية:</span>
           <span id="withdrawModalStatus" class="status-badge">-</span>
         </div>
         
         <!-- نموذج الإجراء (يظهر فقط للطلبات pending) -->
         <div id="withdrawActionForm" class="action-form">
-          <div class="form-group">
-            <label for="withdrawAdminNotesInput" class="form-label">
-              <i class="fas fa-sticky-note"></i>
-              ملاحظات المسؤول (اختياري)
-            </label>
-            <textarea id="withdrawAdminNotesInput" class="form-textarea" placeholder="أدخل ملاحظاتك هنا..."></textarea>
-          </div>
-          
           <div class="modal-actions">
             <button id="cancelWithdrawActionBtn" class="modal-btn cancel">
               <i class="fas fa-times"></i>
@@ -2302,7 +2210,7 @@
     }
 
     // ========== دوال Firebase ==========
-    async function updateDepositStatus(requestId, status, adminNotes = '') {
+    async function updateDepositStatus(requestId, status) {
       try {
         showLoading();
         
@@ -2313,10 +2221,6 @@
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
           processedAt: firebase.firestore.FieldValue.serverTimestamp()
         };
-        
-        if (adminNotes) {
-          updateData.adminNotes = adminNotes;
-        }
         
         if (status === 'approved') {
           const requestDoc = await requestRef.get();
@@ -2375,7 +2279,7 @@
     }
 
     // ========== دالة تحديث حالة طلب السحب ==========
-    async function updateWithdrawStatus(requestId, status, adminNotes = '') {
+    async function updateWithdrawStatus(requestId, status) {
       try {
         // التحقق مما إذا كان الطلب قيد المعالجة حالياً
         if (processingRequests.has(requestId)) {
@@ -2409,7 +2313,6 @@
           // عند تأكيد السحب
           const updateData = {
             status: 'approved',
-            adminNotes: adminNotes || '',
             approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             processedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -2470,7 +2373,6 @@
             // تحديث حالة طلب السحب مع وضع علامة الاسترجاع
             transaction.update(requestRef, {
               status: 'rejected',
-              adminNotes: adminNotes || '',
               refundAmount: refundAmount,
               refundedAt: firebase.firestore.FieldValue.serverTimestamp(),
               updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -2485,7 +2387,7 @@
         }
         
         // إرسال إشعار للمستخدم
-        sendWithdrawNotification(requestId, status, adminNotes);
+        sendWithdrawNotification(requestId, status);
         
         closeWithdrawModal();
         
@@ -2513,7 +2415,7 @@
       }
     }
 
-    async function sendWithdrawNotification(requestId, status, adminNotes = '') {
+    async function sendWithdrawNotification(requestId, status) {
       try {
         if (!db) return;
         
@@ -2538,7 +2440,6 @@
             amount: requestData.amount,
             netAmount: requestData.netAmount,
             currency: requestData.currency,
-            adminNotes: adminNotes,
             timestamp: new Date().toISOString()
           },
           read: false,
@@ -2847,6 +2748,7 @@
       document.getElementById('rejectedWithdrawCount').textContent = formatNumberFrench(stats.rejected);
     }
 
+    // ========== دوال عرض القوائم الجديدة 500x200 ==========
     function renderAllWithdrawsList(requests) {
       const requestsList = document.getElementById('allWithdrawsList');
       requestsList.innerHTML = '';
@@ -2888,16 +2790,12 @@
         const requestCard = document.createElement('div');
         requestCard.className = `request-card ${request.status}`;
         
-        const date = request.createdAt ? formatDate(request.createdAt) : '-';
         const amountText = formatCurrency(request.amount, request.currency);
-        const feesText = formatCurrency(request.fees, request.currency);
-        const netAmountText = formatCurrency(request.netAmount, request.currency);
         const statusText = getStatusText(request.status);
         const statusClass = getStatusClass(request.status);
-        const userInitial = request.userName ? request.userName.charAt(0) : 'م';
         
         requestCard.innerHTML = `
-          <div class="request-header">
+          <div class="card-header">
             <div class="request-id">
               <i class="fab fa-binance"></i>
               ${request.requestId || request.id.substring(0, 8)}...
@@ -2907,127 +2805,43 @@
             </div>
           </div>
           
-          <div class="request-content">
-            <!-- معلومات المستخدم -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-user"></i>
-                المستخدم
-              </div>
-              <div class="info-value info-user">
-                <div class="user-avatar binance">${userInitial}</div>
-                <div class="user-info">
-                  <div class="user-name">${request.userName || 'مستخدم'}</div>
-                  <div class="user-id">ID: ${request.userId}</div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- المبلغ -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-money-bill-wave"></i>
-                المبلغ
-              </div>
-              <div class="info-value info-amount">${amountText}</div>
-            </div>
-            
-            <!-- الرسوم -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-percentage"></i>
-                الرسوم
-              </div>
-              <div class="info-value">${feesText}</div>
-            </div>
-            
-            <!-- المبلغ الصافي -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-coins"></i>
-                المبلغ الصافي
-              </div>
-              <div class="info-value">${netAmountText}</div>
-            </div>
-            
-            <!-- معرف Binance -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fab fa-binance"></i>
-                معرف Binance
-              </div>
-              <div class="info-value" style="font-family: 'Courier New', monospace; font-size: 11px;">
-                ${request.binanceId}
-              </div>
-            </div>
-            
-            <!-- التاريخ -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-calendar"></i>
-                تاريخ الطلب
-              </div>
-              <div class="info-value">${date}</div>
-            </div>
-            
-            <!-- ملاحظات المسؤول -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-sticky-note"></i>
-                ملاحظات المسؤول
-              </div>
-              <div class="info-value">
-                ${request.adminNotes ? request.adminNotes.substring(0, 40) + (request.adminNotes.length > 40 ? '...' : '') : 'لا توجد'}
-              </div>
+          <div class="card-body">
+            <div class="info-amount">${amountText}</div>
+            <div class="info-transaction">
+              <i class="fab fa-binance"></i>
+              ${request.binanceId}
             </div>
           </div>
           
-          <div class="request-actions">
-            <button class="action-btn view binance" data-id="${request.id}" data-type="withdraw">
-              <i class="fas fa-eye"></i>
-              عرض التفاصيل
-            </button>
-            
+          <div class="card-footer">
+            <div class="user-info">
+              <i class="fas fa-user"></i>
+              ${request.userName || 'مستخدم'}
+            </div>
             ${request.status === 'pending' ? `
-              <button class="action-btn approve" data-id="${request.id}" data-type="withdraw">
-                <i class="fas fa-check"></i>
-                تأكيد
-              </button>
-              
-              <button class="action-btn reject" data-id="${request.id}" data-type="withdraw">
-                <i class="fas fa-times"></i>
-                رفض
-              </button>
+              <div class="card-actions">
+                <button class="card-btn approve" data-id="${request.id}" data-type="withdraw">
+                  <i class="fas fa-check"></i>
+                  تأكيد
+                </button>
+                <button class="card-btn reject" data-id="${request.id}" data-type="withdraw">
+                  <i class="fas fa-times"></i>
+                  رفض
+                </button>
+              </div>
             ` : ''}
           </div>
         `;
         
+        // إضافة حدث النقر لفتح التفاصيل
+        requestCard.addEventListener('click', function(e) {
+          // منع فتح التفاصيل عند النقر على الأزرار
+          if (!e.target.closest('.card-btn')) {
+            showWithdrawRequestDetails(request.id, 'withdraw');
+          }
+        });
+        
         requestsList.appendChild(requestCard);
-      });
-      
-      // إضافة الأحداث للأزرار
-      document.querySelectorAll('#allWithdrawsList .action-btn.view[data-type="withdraw"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const requestId = this.getAttribute('data-id');
-          const type = this.getAttribute('data-type');
-          showWithdrawRequestDetails(requestId, type);
-        });
-      });
-      
-      document.querySelectorAll('#allWithdrawsList .action-btn.approve[data-type="withdraw"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const requestId = this.getAttribute('data-id');
-          const type = this.getAttribute('data-type');
-          showWithdrawRequestDetails(requestId, type, 'approve');
-        });
-      });
-      
-      document.querySelectorAll('#allWithdrawsList .action-btn.reject[data-type="withdraw"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const requestId = this.getAttribute('data-id');
-          const type = this.getAttribute('data-type');
-          showWithdrawRequestDetails(requestId, type, 'reject');
-        });
       });
     }
 
@@ -3066,16 +2880,12 @@
         const requestCard = document.createElement('div');
         requestCard.className = `request-card ${request.status}`;
         
-        const date = request.createdAt ? formatDate(request.createdAt) : '-';
         const amountText = formatCurrency(request.amount, request.currency);
-        const transferTypeText = getTransferTypeText(request.transferType);
-        const transferTypeIcon = getTransferTypeIcon(request.transferType);
         const statusText = getStatusText(request.status);
         const statusClass = getStatusClass(request.status);
-        const userInitial = request.userName ? request.userName.charAt(0) : 'م';
         
         requestCard.innerHTML = `
-          <div class="request-header">
+          <div class="card-header">
             <div class="request-id">
               <i class="fas fa-hashtag"></i>
               ${request.id.substring(0, 8)}...
@@ -3085,90 +2895,28 @@
             </div>
           </div>
           
-          <div class="request-content">
-            <!-- معلومات المستخدم -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-user"></i>
-                المستخدم
-              </div>
-              <div class="info-value info-user">
-                <div class="user-avatar">${userInitial}</div>
-                <div class="user-info">
-                  <div class="user-name">${request.userName || 'مستخدم'}</div>
-                  <div class="user-id">ID: ${request.userId}</div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- المبلغ -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-money-bill-wave"></i>
-                المبلغ
-              </div>
-              <div class="info-value info-amount">${amountText}</div>
-            </div>
-            
-            <!-- نوع التحويل -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="${transferTypeIcon}"></i>
-                نوع التحويل
-              </div>
-              <div class="info-value">${transferTypeText}</div>
-            </div>
-            
-            <!-- رقم العملية -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-receipt"></i>
-                رقم العملية
-              </div>
-              <div class="info-value" style="font-family: 'Courier New', monospace; font-size: 11px;">
-                ${request.transactionNumber}
-              </div>
-            </div>
-            
-            <!-- التاريخ -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-calendar"></i>
-                تاريخ الطلب
-              </div>
-              <div class="info-value">${date}</div>
-            </div>
-            
-            <!-- ملاحظات المسؤول -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-sticky-note"></i>
-                ملاحظات المسؤول
-              </div>
-              <div class="info-value">
-                ${request.adminNotes ? request.adminNotes.substring(0, 40) + (request.adminNotes.length > 40 ? '...' : '') : 'لا توجد'}
-              </div>
+          <div class="card-body">
+            <div class="info-amount">${amountText}</div>
+            <div class="info-transaction">
+              <i class="fas fa-receipt"></i>
+              ${request.transactionNumber}
             </div>
           </div>
           
-          <div class="request-actions">
-            <button class="action-btn view" data-id="${request.id}" data-type="deposit">
-              <i class="fas fa-eye"></i>
-              عرض التفاصيل
-            </button>
+          <div class="card-footer">
+            <div class="user-info">
+              <i class="fas fa-user"></i>
+              ${request.userName || 'مستخدم'}
+            </div>
           </div>
         `;
         
-        requestsList.appendChild(requestCard);
-      });
-      
-      // إضافة الأحداث للأزرار
-      document.querySelectorAll('#allRejectedDepositsList .action-btn.view[data-type="deposit"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const requestId = this.getAttribute('data-id');
-          const type = this.getAttribute('data-type');
-          showDepositRequestDetails(requestId, type);
+        // إضافة حدث النقر لفتح التفاصيل
+        requestCard.addEventListener('click', function() {
+          showDepositRequestDetails(request.id, 'deposit');
         });
+        
+        requestsList.appendChild(requestCard);
       });
     }
 
@@ -3207,16 +2955,12 @@
         const requestCard = document.createElement('div');
         requestCard.className = `request-card ${request.status}`;
         
-        const date = request.createdAt ? formatDate(request.createdAt) : '-';
         const amountText = formatCurrency(request.amount, request.currency);
-        const transferTypeText = getTransferTypeText(request.transferType);
-        const transferTypeIcon = getTransferTypeIcon(request.transferType);
         const statusText = getStatusText(request.status);
         const statusClass = getStatusClass(request.status);
-        const userInitial = request.userName ? request.userName.charAt(0) : 'م';
         
         requestCard.innerHTML = `
-          <div class="request-header">
+          <div class="card-header">
             <div class="request-id">
               <i class="fas fa-hashtag"></i>
               ${request.id.substring(0, 8)}...
@@ -3226,116 +2970,43 @@
             </div>
           </div>
           
-          <div class="request-content">
-            <!-- معلومات المستخدم -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-user"></i>
-                المستخدم
-              </div>
-              <div class="info-value info-user">
-                <div class="user-avatar">${userInitial}</div>
-                <div class="user-info">
-                  <div class="user-name">${request.userName || 'مستخدم'}</div>
-                  <div class="user-id">ID: ${request.userId}</div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- المبلغ -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-money-bill-wave"></i>
-                المبلغ
-              </div>
-              <div class="info-value info-amount">${amountText}</div>
-            </div>
-            
-            <!-- نوع التحويل -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="${transferTypeIcon}"></i>
-                نوع التحويل
-              </div>
-              <div class="info-value">${transferTypeText}</div>
-            </div>
-            
-            <!-- رقم العملية -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-receipt"></i>
-                رقم العملية
-              </div>
-              <div class="info-value" style="font-family: 'Courier New', monospace; font-size: 11px;">
-                ${request.transactionNumber}
-              </div>
-            </div>
-            
-            <!-- التاريخ -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-calendar"></i>
-                تاريخ الطلب
-              </div>
-              <div class="info-value">${date}</div>
-            </div>
-            
-            <!-- ملاحظات -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-sticky-note"></i>
-                ملاحظات
-              </div>
-              <div class="info-value">
-                ${request.notes ? request.notes.substring(0, 40) + (request.notes.length > 40 ? '...' : '') : 'لا توجد'}
-              </div>
+          <div class="card-body">
+            <div class="info-amount">${amountText}</div>
+            <div class="info-transaction">
+              <i class="fas fa-receipt"></i>
+              ${request.transactionNumber}
             </div>
           </div>
           
-          <div class="request-actions">
-            <button class="action-btn view" data-id="${request.id}" data-type="deposit">
-              <i class="fas fa-eye"></i>
-              عرض التفاصيل
-            </button>
-            
-            <button class="action-btn approve" data-id="${request.id}" data-type="deposit">
-              <i class="fas fa-check"></i>
-              تأكيد
-            </button>
-            
-            <button class="action-btn reject" data-id="${request.id}" data-type="deposit">
-              <i class="fas fa-times"></i>
-              رفض
-            </button>
+          <div class="card-footer">
+            <div class="user-info">
+              <i class="fas fa-user"></i>
+              ${request.userName || 'مستخدم'}
+            </div>
+            ${request.status === 'pending' ? `
+              <div class="card-actions">
+                <button class="card-btn approve" data-id="${request.id}" data-type="deposit">
+                  <i class="fas fa-check"></i>
+                  تأكيد
+                </button>
+                <button class="card-btn reject" data-id="${request.id}" data-type="deposit">
+                  <i class="fas fa-times"></i>
+                  رفض
+                </button>
+              </div>
+            ` : ''}
           </div>
         `;
         
+        // إضافة حدث النقر لفتح التفاصيل
+        requestCard.addEventListener('click', function(e) {
+          // منع فتح التفاصيل عند النقر على الأزرار
+          if (!e.target.closest('.card-btn')) {
+            showDepositRequestDetails(request.id, 'deposit');
+          }
+        });
+        
         requestsList.appendChild(requestCard);
-      });
-      
-      // إضافة الأحداث للأزرار
-      document.querySelectorAll('#allPendingDepositsList .action-btn.view[data-type="deposit"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const requestId = this.getAttribute('data-id');
-          const type = this.getAttribute('data-type');
-          showDepositRequestDetails(requestId, type);
-        });
-      });
-      
-      document.querySelectorAll('#allPendingDepositsList .action-btn.approve[data-type="deposit"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const requestId = this.getAttribute('data-id');
-          const type = this.getAttribute('data-type');
-          showDepositRequestDetails(requestId, type, 'approve');
-        });
-      });
-      
-      document.querySelectorAll('#allPendingDepositsList .action-btn.reject[data-type="deposit"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const requestId = this.getAttribute('data-id');
-          const type = this.getAttribute('data-type');
-          showDepositRequestDetails(requestId, type, 'reject');
-        });
       });
     }
 
@@ -3374,16 +3045,12 @@
         const requestCard = document.createElement('div');
         requestCard.className = `request-card ${request.status}`;
         
-        const date = request.createdAt ? formatDate(request.createdAt) : '-';
         const amountText = formatCurrency(request.amount, request.currency);
-        const transferTypeText = getTransferTypeText(request.transferType);
-        const transferTypeIcon = getTransferTypeIcon(request.transferType);
         const statusText = getStatusText(request.status);
         const statusClass = getStatusClass(request.status);
-        const userInitial = request.userName ? request.userName.charAt(0) : 'م';
         
         requestCard.innerHTML = `
-          <div class="request-header">
+          <div class="card-header">
             <div class="request-id">
               <i class="fas fa-hashtag"></i>
               ${request.id.substring(0, 8)}...
@@ -3393,90 +3060,28 @@
             </div>
           </div>
           
-          <div class="request-content">
-            <!-- معلومات المستخدم -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-user"></i>
-                المستخدم
-              </div>
-              <div class="info-value info-user">
-                <div class="user-avatar">${userInitial}</div>
-                <div class="user-info">
-                  <div class="user-name">${request.userName || 'مستخدم'}</div>
-                  <div class="user-id">ID: ${request.userId}</div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- المبلغ -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-money-bill-wave"></i>
-                المبلغ
-              </div>
-              <div class="info-value info-amount">${amountText}</div>
-            </div>
-            
-            <!-- نوع التحويل -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="${transferTypeIcon}"></i>
-                نوع التحويل
-              </div>
-              <div class="info-value">${transferTypeText}</div>
-            </div>
-            
-            <!-- رقم العملية -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-receipt"></i>
-                رقم العملية
-              </div>
-              <div class="info-value" style="font-family: 'Courier New', monospace; font-size: 11px;">
-                ${request.transactionNumber}
-              </div>
-            </div>
-            
-            <!-- التاريخ -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-calendar"></i>
-                تاريخ الطلب
-              </div>
-              <div class="info-value">${date}</div>
-            </div>
-            
-            <!-- ملاحظات المسؤول -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-sticky-note"></i>
-                ملاحظات المسؤول
-              </div>
-              <div class="info-value">
-                ${request.adminNotes ? request.adminNotes.substring(0, 40) + (request.adminNotes.length > 40 ? '...' : '') : 'لا توجد'}
-              </div>
+          <div class="card-body">
+            <div class="info-amount">${amountText}</div>
+            <div class="info-transaction">
+              <i class="fas fa-receipt"></i>
+              ${request.transactionNumber}
             </div>
           </div>
           
-          <div class="request-actions">
-            <button class="action-btn view" data-id="${request.id}" data-type="deposit">
-              <i class="fas fa-eye"></i>
-              عرض التفاصيل
-            </button>
+          <div class="card-footer">
+            <div class="user-info">
+              <i class="fas fa-user"></i>
+              ${request.userName || 'مستخدم'}
+            </div>
           </div>
         `;
         
-        requestsList.appendChild(requestCard);
-      });
-      
-      // إضافة الأحداث للأزرار
-      document.querySelectorAll('#allApprovedDepositsList .action-btn.view[data-type="deposit"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const requestId = this.getAttribute('data-id');
-          const type = this.getAttribute('data-type');
-          showDepositRequestDetails(requestId, type);
+        // إضافة حدث النقر لفتح التفاصيل
+        requestCard.addEventListener('click', function() {
+          showDepositRequestDetails(request.id, 'deposit');
         });
+        
+        requestsList.appendChild(requestCard);
       });
     }
 
@@ -3516,16 +3121,12 @@
         const requestCard = document.createElement('div');
         requestCard.className = `request-card ${request.status}`;
         
-        const date = request.createdAt ? formatDate(request.createdAt) : '-';
         const amountText = formatCurrency(request.amount, request.currency);
-        const feesText = formatCurrency(request.fees, request.currency);
-        const netAmountText = formatCurrency(request.netAmount, request.currency);
         const statusText = getStatusText(request.status);
         const statusClass = getStatusClass(request.status);
-        const userInitial = request.userName ? request.userName.charAt(0) : 'م';
         
         requestCard.innerHTML = `
-          <div class="request-header">
+          <div class="card-header">
             <div class="request-id">
               <i class="fab fa-binance"></i>
               ${request.requestId || request.id.substring(0, 8)}...
@@ -3535,99 +3136,28 @@
             </div>
           </div>
           
-          <div class="request-content">
-            <!-- معلومات المستخدم -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-user"></i>
-                المستخدم
-              </div>
-              <div class="info-value info-user">
-                <div class="user-avatar binance">${userInitial}</div>
-                <div class="user-info">
-                  <div class="user-name">${request.userName || 'مستخدم'}</div>
-                  <div class="user-id">ID: ${request.userId}</div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- المبلغ -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-money-bill-wave"></i>
-                المبلغ
-              </div>
-              <div class="info-value info-amount">${amountText}</div>
-            </div>
-            
-            <!-- الرسوم -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-percentage"></i>
-                الرسوم
-              </div>
-              <div class="info-value">${feesText}</div>
-            </div>
-            
-            <!-- المبلغ الصافي -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-coins"></i>
-                المبلغ الصافي
-              </div>
-              <div class="info-value">${netAmountText}</div>
-            </div>
-            
-            <!-- معرف Binance -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fab fa-binance"></i>
-                معرف Binance
-              </div>
-              <div class="info-value" style="font-family: 'Courier New', monospace; font-size: 11px;">
-                ${request.binanceId}
-              </div>
-            </div>
-            
-            <!-- التاريخ -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-calendar"></i>
-                تاريخ الطلب
-              </div>
-              <div class="info-value">${date}</div>
-            </div>
-            
-            <!-- ملاحظات المسؤول -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-sticky-note"></i>
-                ملاحظات المسؤول
-              </div>
-              <div class="info-value">
-                ${request.adminNotes ? request.adminNotes.substring(0, 40) + (request.adminNotes.length > 40 ? '...' : '') : 'لا توجد'}
-              </div>
+          <div class="card-body">
+            <div class="info-amount">${amountText}</div>
+            <div class="info-transaction">
+              <i class="fab fa-binance"></i>
+              ${request.binanceId}
             </div>
           </div>
           
-          <div class="request-actions">
-            <button class="action-btn view binance" data-id="${request.id}" data-type="withdraw">
-              <i class="fas fa-eye"></i>
-              عرض التفاصيل
-            </button>
+          <div class="card-footer">
+            <div class="user-info">
+              <i class="fas fa-user"></i>
+              ${request.userName || 'مستخدم'}
+            </div>
           </div>
         `;
         
-        requestsList.appendChild(requestCard);
-      });
-      
-      // إضافة الأحداث للأزرار
-      document.querySelectorAll('#allApprovedWithdrawsList .action-btn.view[data-type="withdraw"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const requestId = this.getAttribute('data-id');
-          const type = this.getAttribute('data-type');
-          showWithdrawRequestDetails(requestId, type);
+        // إضافة حدث النقر لفتح التفاصيل
+        requestCard.addEventListener('click', function() {
+          showWithdrawRequestDetails(request.id, 'withdraw');
         });
+        
+        requestsList.appendChild(requestCard);
       });
     }
 
@@ -3667,16 +3197,12 @@
         const requestCard = document.createElement('div');
         requestCard.className = `request-card ${request.status}`;
         
-        const date = request.createdAt ? formatDate(request.createdAt) : '-';
         const amountText = formatCurrency(request.amount, request.currency);
-        const feesText = formatCurrency(request.fees, request.currency);
-        const netAmountText = formatCurrency(request.netAmount, request.currency);
         const statusText = getStatusText(request.status);
         const statusClass = getStatusClass(request.status);
-        const userInitial = request.userName ? request.userName.charAt(0) : 'م';
         
         requestCard.innerHTML = `
-          <div class="request-header">
+          <div class="card-header">
             <div class="request-id">
               <i class="fab fa-binance"></i>
               ${request.requestId || request.id.substring(0, 8)}...
@@ -3686,125 +3212,43 @@
             </div>
           </div>
           
-          <div class="request-content">
-            <!-- معلومات المستخدم -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-user"></i>
-                المستخدم
-              </div>
-              <div class="info-value info-user">
-                <div class="user-avatar binance">${userInitial}</div>
-                <div class="user-info">
-                  <div class="user-name">${request.userName || 'مستخدم'}</div>
-                  <div class="user-id">ID: ${request.userId}</div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- المبلغ -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-money-bill-wave"></i>
-                المبلغ
-              </div>
-              <div class="info-value info-amount">${amountText}</div>
-            </div>
-            
-            <!-- الرسوم -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-percentage"></i>
-                الرسوم
-              </div>
-              <div class="info-value">${feesText}</div>
-            </div>
-            
-            <!-- المبلغ الصافي -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-coins"></i>
-                المبلغ الصافي
-              </div>
-              <div class="info-value">${netAmountText}</div>
-            </div>
-            
-            <!-- معرف Binance -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fab fa-binance"></i>
-                معرف Binance
-              </div>
-              <div class="info-value" style="font-family: 'Courier New', monospace; font-size: 11px;">
-                ${request.binanceId}
-              </div>
-            </div>
-            
-            <!-- التاريخ -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-calendar"></i>
-                تاريخ الطلب
-              </div>
-              <div class="info-value">${date}</div>
-            </div>
-            
-            <!-- ملاحظات المستخدم -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-sticky-note"></i>
-                ملاحظات المستخدم
-              </div>
-              <div class="info-value">
-                ${request.notes ? request.notes.substring(0, 40) + (request.notes.length > 40 ? '...' : '') : 'لا توجد'}
-              </div>
+          <div class="card-body">
+            <div class="info-amount">${amountText}</div>
+            <div class="info-transaction">
+              <i class="fab fa-binance"></i>
+              ${request.binanceId}
             </div>
           </div>
           
-          <div class="request-actions">
-            <button class="action-btn view binance" data-id="${request.id}" data-type="withdraw">
-              <i class="fas fa-eye"></i>
-              عرض التفاصيل
-            </button>
-            
-            <button class="action-btn approve" data-id="${request.id}" data-type="withdraw">
-              <i class="fas fa-check"></i>
-              تأكيد
-            </button>
-            
-            <button class="action-btn reject" data-id="${request.id}" data-type="withdraw">
-              <i class="fas fa-times"></i>
-              رفض
-            </button>
+          <div class="card-footer">
+            <div class="user-info">
+              <i class="fas fa-user"></i>
+              ${request.userName || 'مستخدم'}
+            </div>
+            ${request.status === 'pending' ? `
+              <div class="card-actions">
+                <button class="card-btn approve" data-id="${request.id}" data-type="withdraw">
+                  <i class="fas fa-check"></i>
+                  تأكيد
+                </button>
+                <button class="card-btn reject" data-id="${request.id}" data-type="withdraw">
+                  <i class="fas fa-times"></i>
+                  رفض
+                </button>
+              </div>
+            ` : ''}
           </div>
         `;
         
+        // إضافة حدث النقر لفتح التفاصيل
+        requestCard.addEventListener('click', function(e) {
+          // منع فتح التفاصيل عند النقر على الأزرار
+          if (!e.target.closest('.card-btn')) {
+            showWithdrawRequestDetails(request.id, 'withdraw');
+          }
+        });
+        
         requestsList.appendChild(requestCard);
-      });
-      
-      // إضافة الأحداث للأزرار
-      document.querySelectorAll('#allPendingWithdrawsList .action-btn.view[data-type="withdraw"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const requestId = this.getAttribute('data-id');
-          const type = this.getAttribute('data-type');
-          showWithdrawRequestDetails(requestId, type);
-        });
-      });
-      
-      document.querySelectorAll('#allPendingWithdrawsList .action-btn.approve[data-type="withdraw"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const requestId = this.getAttribute('data-id');
-          const type = this.getAttribute('data-type');
-          showWithdrawRequestDetails(requestId, type, 'approve');
-        });
-      });
-      
-      document.querySelectorAll('#allPendingWithdrawsList .action-btn.reject[data-type="withdraw"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const requestId = this.getAttribute('data-id');
-          const type = this.getAttribute('data-type');
-          showWithdrawRequestDetails(requestId, type, 'reject');
-        });
       });
     }
 
@@ -3844,17 +3288,12 @@
         const requestCard = document.createElement('div');
         requestCard.className = `request-card ${request.status}`;
         
-        const date = request.createdAt ? formatDate(request.createdAt) : '-';
         const amountText = formatCurrency(request.amount, request.currency);
-        const feesText = formatCurrency(request.fees, request.currency);
-        const netAmountText = formatCurrency(request.netAmount, request.currency);
-        const refundAmountText = formatCurrency(request.refundAmount, request.currency);
         const statusText = getStatusText(request.status);
         const statusClass = getStatusClass(request.status);
-        const userInitial = request.userName ? request.userName.charAt(0) : 'م';
         
         requestCard.innerHTML = `
-          <div class="request-header">
+          <div class="card-header">
             <div class="request-id">
               <i class="fab fa-binance"></i>
               ${request.requestId || request.id.substring(0, 8)}...
@@ -3864,108 +3303,28 @@
             </div>
           </div>
           
-          <div class="request-content">
-            <!-- معلومات المستخدم -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-user"></i>
-                المستخدم
-              </div>
-              <div class="info-value info-user">
-                <div class="user-avatar binance">${userInitial}</div>
-                <div class="user-info">
-                  <div class="user-name">${request.userName || 'مستخدم'}</div>
-                  <div class="user-id">ID: ${request.userId}</div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- المبلغ -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-money-bill-wave"></i>
-                المبلغ
-              </div>
-              <div class="info-value info-amount">${amountText}</div>
-            </div>
-            
-            <!-- الرسوم -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-percentage"></i>
-                الرسوم
-              </div>
-              <div class="info-value">${feesText}</div>
-            </div>
-            
-            <!-- المبلغ الصافي -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-coins"></i>
-                المبلغ الصافي
-              </div>
-              <div class="info-value">${netAmountText}</div>
-            </div>
-            
-            <!-- المبلغ المسترجع -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-redo"></i>
-                المبلغ المسترجع
-              </div>
-              <div class="info-value">${refundAmountText || 'لم يتم التحديد'}</div>
-            </div>
-            
-            <!-- معرف Binance -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fab fa-binance"></i>
-                معرف Binance
-              </div>
-              <div class="info-value" style="font-family: 'Courier New', monospace; font-size: 11px;">
-                ${request.binanceId}
-              </div>
-            </div>
-            
-            <!-- التاريخ -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-calendar"></i>
-                تاريخ الطلب
-              </div>
-              <div class="info-value">${date}</div>
-            </div>
-            
-            <!-- ملاحظات المسؤول -->
-            <div class="request-info">
-              <div class="info-label">
-                <i class="fas fa-sticky-note"></i>
-                ملاحظات المسؤول
-              </div>
-              <div class="info-value">
-                ${request.adminNotes ? request.adminNotes.substring(0, 40) + (request.adminNotes.length > 40 ? '...' : '') : 'لا توجد'}
-              </div>
+          <div class="card-body">
+            <div class="info-amount">${amountText}</div>
+            <div class="info-transaction">
+              <i class="fab fa-binance"></i>
+              ${request.binanceId}
             </div>
           </div>
           
-          <div class="request-actions">
-            <button class="action-btn view binance" data-id="${request.id}" data-type="withdraw">
-              <i class="fas fa-eye"></i>
-              عرض التفاصيل
-            </button>
+          <div class="card-footer">
+            <div class="user-info">
+              <i class="fas fa-user"></i>
+              ${request.userName || 'مستخدم'}
+            </div>
           </div>
         `;
         
-        requestsList.appendChild(requestCard);
-      });
-      
-      // إضافة الأحداث للأزرار
-      document.querySelectorAll('#allRejectedWithdrawsList .action-btn.view[data-type="withdraw"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const requestId = this.getAttribute('data-id');
-          const type = this.getAttribute('data-type');
-          showWithdrawRequestDetails(requestId, type);
+        // إضافة حدث النقر لفتح التفاصيل
+        requestCard.addEventListener('click', function() {
+          showWithdrawRequestDetails(request.id, 'withdraw');
         });
+        
+        requestsList.appendChild(requestCard);
       });
     }
 
@@ -3986,33 +3345,21 @@
         
         // تعبئة البيانات
         document.getElementById('depositModalRequestId').textContent = requestId.substring(0, 12) + '...';
-        document.getElementById('depositModalUserName').textContent = requestData.userName || 'مستخدم';
         document.getElementById('depositModalUserId').textContent = requestData.userId;
         document.getElementById('depositModalAmount').textContent = formatCurrency(requestData.amount, requestData.currency);
         document.getElementById('depositModalTransferType').textContent = getTransferTypeText(requestData.transferType);
         document.getElementById('depositModalTransactionNumber').textContent = requestData.transactionNumber;
-        document.getElementById('depositModalUserNotes').textContent = requestData.notes || 'لا توجد';
         document.getElementById('depositModalCreatedAt').textContent = formatDate(requestData.createdAt);
-        document.getElementById('depositModalUpdatedAt').textContent = formatDate(requestData.updatedAt);
         
         // تحديث الحالة
         const statusElement = document.getElementById('depositModalStatus');
         statusElement.textContent = getStatusText(requestData.status);
         statusElement.className = `status-badge ${getStatusClass(requestData.status)}`;
         
-        // عرض ملاحظات المسؤول إذا كانت موجودة
-        if (requestData.adminNotes) {
-          document.getElementById('depositAdminNotesSection').style.display = 'block';
-          document.getElementById('depositModalAdminNotes').textContent = requestData.adminNotes;
-        } else {
-          document.getElementById('depositAdminNotesSection').style.display = 'none';
-        }
-        
         // التحكم في عرض نموذج الإجراء
         const actionForm = document.getElementById('depositActionForm');
         if (requestData.status === 'pending' && action) {
           actionForm.style.display = 'block';
-          document.getElementById('depositAdminNotesInput').value = '';
           
           // إخفاء الزر المناسب حسب الإجراء
           if (action === 'approve') {
@@ -4061,15 +3408,11 @@
         
         // تعبئة البيانات
         document.getElementById('withdrawModalRequestId').textContent = requestData.requestId || requestId.substring(0, 12) + '...';
-        document.getElementById('withdrawModalUserName').textContent = requestData.userName || 'مستخدم';
         document.getElementById('withdrawModalUserId').textContent = requestData.userId;
         document.getElementById('withdrawModalAmount').textContent = formatCurrency(requestData.amount, requestData.currency);
         document.getElementById('withdrawModalFees').textContent = formatCurrency(requestData.fees, requestData.currency);
-        document.getElementById('withdrawModalNetAmount').textContent = formatCurrency(requestData.netAmount, requestData.currency);
         document.getElementById('withdrawModalBinanceId').textContent = requestData.binanceId;
         document.getElementById('withdrawModalCreatedAt').textContent = formatDate(requestData.createdAt);
-        document.getElementById('withdrawModalUpdatedAt').textContent = formatDate(requestData.updatedAt);
-        document.getElementById('withdrawModalAdminNotes').textContent = requestData.adminNotes || 'لا توجد';
         
         // تحديث الحالة
         const statusElement = document.getElementById('withdrawModalStatus');
@@ -4080,7 +3423,6 @@
         const actionForm = document.getElementById('withdrawActionForm');
         if (requestData.status === 'pending' && action) {
           actionForm.style.display = 'block';
-          document.getElementById('withdrawAdminNotesInput').value = '';
           
           // إخفاء الزر المناسب حسب الإجراء
           if (action === 'approve') {
@@ -4113,7 +3455,6 @@
       document.getElementById('depositRequestModal').style.display = 'none';
       currentRequestId = null;
       currentRequestType = null;
-      document.getElementById('depositAdminNotesInput').value = '';
     }
 
     function openWithdrawModal() {
@@ -4124,7 +3465,6 @@
       document.getElementById('withdrawRequestModal').style.display = 'none';
       currentRequestId = null;
       currentRequestType = null;
-      document.getElementById('withdrawAdminNotesInput').value = '';
     }
 
     // ========== دوال عرض واجهات مختلفة ==========
@@ -4371,6 +3711,24 @@
       showToast('تم العودة للوحة التحكم الرئيسية', 'success');
     }
 
+    // ========== معالجة النقر على أزرار البطاقات ==========
+    function handleCardButtonClick(event) {
+      const button = event.target.closest('.card-btn');
+      if (!button) return;
+      
+      event.stopPropagation(); // منع فتح التفاصيل عند النقر على الأزرار
+      
+      const requestId = button.getAttribute('data-id');
+      const requestType = button.getAttribute('data-type');
+      const isApprove = button.classList.contains('approve');
+      
+      if (requestType === 'deposit') {
+        showDepositRequestDetails(requestId, 'deposit', isApprove ? 'approve' : 'reject');
+      } else if (requestType === 'withdraw') {
+        showWithdrawRequestDetails(requestId, 'withdraw', isApprove ? 'approve' : 'reject');
+      }
+    }
+
     // ========== دوال تسجيل الدخول ==========
     function login() {
       const username = document.getElementById('usernameInput').value.trim();
@@ -4423,6 +3781,13 @@
         document.getElementById('loginContainer').style.display = 'flex';
         document.getElementById('adminContainer').style.display = 'none';
       }
+      
+      // إضافة مستمع للأزرار في البطاقات
+      document.addEventListener('click', function(e) {
+        if (e.target.closest('.card-btn')) {
+          handleCardButtonClick(e);
+        }
+      });
       
       // أحداث تسجيل الدخول
       document.getElementById('loginBtn').addEventListener('click', login);
@@ -4596,16 +3961,12 @@
       
       document.getElementById('approveDepositRequestBtn').addEventListener('click', function() {
         if (!currentRequestId) return;
-        
-        const adminNotes = document.getElementById('depositAdminNotesInput').value.trim();
-        updateDepositStatus(currentRequestId, 'approved', adminNotes);
+        updateDepositStatus(currentRequestId, 'approved');
       });
       
       document.getElementById('rejectDepositRequestBtn').addEventListener('click', function() {
         if (!currentRequestId) return;
-        
-        const adminNotes = document.getElementById('depositAdminNotesInput').value.trim();
-        updateDepositStatus(currentRequestId, 'rejected', adminNotes);
+        updateDepositStatus(currentRequestId, 'rejected');
       });
       
       // أحداث نافذة تفاصيل طلب السحب
@@ -4614,16 +3975,12 @@
       
       document.getElementById('approveWithdrawRequestBtn').addEventListener('click', function() {
         if (!currentRequestId) return;
-        
-        const adminNotes = document.getElementById('withdrawAdminNotesInput').value.trim();
-        updateWithdrawStatus(currentRequestId, 'approved', adminNotes);
+        updateWithdrawStatus(currentRequestId, 'approved');
       });
       
       document.getElementById('rejectWithdrawRequestBtn').addEventListener('click', function() {
         if (!currentRequestId) return;
-        
-        const adminNotes = document.getElementById('withdrawAdminNotesInput').value.trim();
-        updateWithdrawStatus(currentRequestId, 'rejected', adminNotes);
+        updateWithdrawStatus(currentRequestId, 'rejected');
       });
       
       // إغلاق النوافذ بالنقر خارجها
@@ -4638,9 +3995,6 @@
           closeWithdrawModal();
         }
       });
-      
-      // ========== حدث الضغط على بطاقة إجمالي طلبات السحب ==========
-      // تمت إزالة هذه البطاقة من الواجهة الرئيسية
       
       // ========== حدث الضغط على بطاقة طلبات الإيداع المرفوضة ==========
       document.getElementById('totalRejectedCard').addEventListener('click', function() {
