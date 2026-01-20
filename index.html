@@ -2227,18 +2227,17 @@
       return success;
     }
 
-    // ========== دالة حساب إجمالي أرصدة المستخدمين مع exchange_orders ==========
+    // ========== دالة حساب إجمالي أرصدة المستخدمين + طلبات التبادل النشطة ==========
     async function calculateTotalBalance() {
       try {
         showLoading();
         
-        // جلب جميع المستخدمين
+        // حساب إجمالي أرصدة المستخدمين
         const usersSnapshot = await db.collection('users').get();
         let totalBalanceDZD = 0;
         let totalBalanceUSDT = 0;
         let userCount = 0;
         
-        // حساب أرصدة المستخدمين
         usersSnapshot.forEach((doc) => {
           const userData = doc.data();
           userCount++;
@@ -2257,85 +2256,65 @@
           }
         });
         
-        // جلب جميع طلبات التبادل (exchange_orders)
-        const exchangeOrdersSnapshot = await db.collection('exchange_orders').get();
-        let exchangeBalanceDZD = 0;
-        let exchangeBalanceUSDT = 0;
-        let exchangeCount = 0;
-        
-        // حساب أرصدة التبادل
-        exchangeOrdersSnapshot.forEach((doc) => {
-          const exchangeData = doc.data();
-          exchangeCount++;
+        // حساب إجمالي قيمة طلبات التبادل النشطة (حالة active) لكل من USDT و DZD
+        let totalExchangeActiveUSDT = 0;
+        let totalExchangeActiveDZD = 0;
+        try {
+          const exchangeOrdersSnapshot = await db.collection('exchange_orders')
+            .where('status', '==', 'active')
+            .get();
           
-          // تحقق من أن البيانات تحتوي على أرصدة
-          if (exchangeData.balances && typeof exchangeData.balances === 'object') {
-            Object.keys(exchangeData.balances).forEach(currency => {
-              const balance = parseFloat(exchangeData.balances[currency]) || 0;
-              
-              if (currency === 'USDT') {
-                exchangeBalanceUSDT += balance;
-              } else if (currency === 'DZD') {
-                exchangeBalanceDZD += balance;
-              }
-            });
-          }
-          // إذا كان هناك حقول منفصلة للمبالغ
-          else if (exchangeData.amountFrom && exchangeData.currencyFrom) {
-            const amount = parseFloat(exchangeData.amountFrom) || 0;
-            const currency = exchangeData.currencyFrom;
+          exchangeOrdersSnapshot.forEach((doc) => {
+            const orderData = doc.data();
+            const sellAmount = parseFloat(orderData.sellAmount) || 0;
+            const sellCurrency = orderData.sellCurrency;
             
-            if (currency === 'USDT') {
-              exchangeBalanceUSDT += amount;
-            } else if (currency === 'DZD') {
-              exchangeBalanceDZD += amount;
+            // نضيف فقط إذا كانت العملة USDT أو DZD
+            if (sellCurrency === 'USDT') {
+              totalExchangeActiveUSDT += sellAmount;
+            } else if (sellCurrency === 'DZD') {
+              totalExchangeActiveDZD += sellAmount;
             }
-          }
+          });
           
-          if (exchangeData.amountTo && exchangeData.currencyTo) {
-            const amount = parseFloat(exchangeData.amountTo) || 0;
-            const currency = exchangeData.currencyTo;
-            
-            if (currency === 'USDT') {
-              exchangeBalanceUSDT += amount;
-            } else if (currency === 'DZD') {
-              exchangeBalanceDZD += amount;
-            }
-          }
-        });
+          console.log(`📊 إجمالي طلبات التبادل النشطة: `);
+          console.log(`  - USDT: ${formatNumberFrench(totalExchangeActiveUSDT)}`);
+          console.log(`  - DZD: ${formatNumberFrench(totalExchangeActiveDZD)}`);
+        } catch (exchangeError) {
+          console.error('❌ خطأ في جلب طلبات التبادل:', exchangeError);
+        }
         
-        // جمع إجمالي الأرصدة من المستخدمين وطلبات التبادل
-        const finalTotalDZD = totalBalanceDZD + exchangeBalanceDZD;
-        const finalTotalUSDT = totalBalanceUSDT + exchangeBalanceUSDT;
+        // إجمالي USDT (أرصدة المستخدمين + طلبات التبادل النشطة لـ USDT)
+        const totalCombinedUSDT = totalBalanceUSDT + totalExchangeActiveUSDT;
+        
+        // إجمالي DZD (أرصدة المستخدمين + طلبات التبادل النشطة لـ DZD)
+        const totalCombinedDZD = totalBalanceDZD + totalExchangeActiveDZD;
         
         // تحديث العرض بالأرقام الفرنسية
         document.getElementById('totalBalanceDZD').textContent = 
-          formatNumberFrench(finalTotalDZD) + ' DZD';
+          formatNumberFrench(totalCombinedDZD) + ' DZD';
         
         document.getElementById('totalBalanceUSDT').textContent = 
-          formatNumberFrench(finalTotalUSDT) + ' USDT';
+          formatNumberFrench(totalCombinedUSDT) + ' USDT';
         
-        console.log(`📊 إحصائيات الأرصدة:
-          - مستخدمين: ${userCount}
-          - أرصدة DZD من المستخدمين: ${totalBalanceDZD}
-          - أرصدة USDT من المستخدمين: ${totalBalanceUSDT}
-          - طلبات تبادل: ${exchangeCount}
-          - أرصدة DZD من التبادل: ${exchangeBalanceDZD}
-          - أرصدة USDT من التبادل: ${exchangeBalanceUSDT}
-          - الإجمالي DZD: ${finalTotalDZD}
-          - الإجمالي USDT: ${finalTotalUSDT}
-        `);
+        // عرض تفاصيل الإجماليات في الكونسول
+        console.log('📊 ملخص الأرصدة:');
+        console.log(`- إجمالي DZD من المستخدمين: ${formatNumberFrench(totalBalanceDZD)}`);
+        console.log(`- إجمالي DZD من التبادلات النشطة: ${formatNumberFrench(totalExchangeActiveDZD)}`);
+        console.log(`- إجمالي DZD الكلي: ${formatNumberFrench(totalCombinedDZD)}`);
+        console.log(`- إجمالي USDT من المستخدمين: ${formatNumberFrench(totalBalanceUSDT)}`);
+        console.log(`- إجمالي USDT من التبادلات النشطة: ${formatNumberFrench(totalExchangeActiveUSDT)}`);
+        console.log(`- إجمالي USDT الكلي: ${formatNumberFrench(totalCombinedUSDT)}`);
         
         hideLoading();
         return { 
-          totalBalanceDZD: finalTotalDZD, 
-          totalBalanceUSDT: finalTotalUSDT, 
-          userCount,
-          exchangeCount,
-          userDZD: totalBalanceDZD,
-          userUSDT: totalBalanceUSDT,
-          exchangeDZD: exchangeBalanceDZD,
-          exchangeUSDT: exchangeBalanceUSDT
+          totalBalanceDZD, 
+          totalBalanceUSDT, 
+          totalExchangeActiveUSDT,
+          totalExchangeActiveDZD,
+          totalCombinedUSDT,
+          totalCombinedDZD,
+          userCount 
         };
         
       } catch (error) {
@@ -3866,6 +3845,9 @@
       // إعادة تحميل إحصائية الطلبات
       setupRealtimeDepositListener();
       setupRealtimeWithdrawListener();
+      
+      // إعادة حساب الأرصدة
+      calculateTotalBalance();
       
       showToast('تم العودة للوحة التحكم الرئيسية', 'success');
     }
