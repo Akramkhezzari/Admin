@@ -2227,16 +2227,18 @@
       return success;
     }
 
-    // ========== دالة حساب إجمالي أرصدة المستخدمين ==========
+    // ========== دالة حساب إجمالي أرصدة المستخدمين مع exchange_orders ==========
     async function calculateTotalBalance() {
       try {
         showLoading();
         
+        // جلب جميع المستخدمين
         const usersSnapshot = await db.collection('users').get();
         let totalBalanceDZD = 0;
         let totalBalanceUSDT = 0;
         let userCount = 0;
         
+        // حساب أرصدة المستخدمين
         usersSnapshot.forEach((doc) => {
           const userData = doc.data();
           userCount++;
@@ -2255,15 +2257,86 @@
           }
         });
         
+        // جلب جميع طلبات التبادل (exchange_orders)
+        const exchangeOrdersSnapshot = await db.collection('exchange_orders').get();
+        let exchangeBalanceDZD = 0;
+        let exchangeBalanceUSDT = 0;
+        let exchangeCount = 0;
+        
+        // حساب أرصدة التبادل
+        exchangeOrdersSnapshot.forEach((doc) => {
+          const exchangeData = doc.data();
+          exchangeCount++;
+          
+          // تحقق من أن البيانات تحتوي على أرصدة
+          if (exchangeData.balances && typeof exchangeData.balances === 'object') {
+            Object.keys(exchangeData.balances).forEach(currency => {
+              const balance = parseFloat(exchangeData.balances[currency]) || 0;
+              
+              if (currency === 'USDT') {
+                exchangeBalanceUSDT += balance;
+              } else if (currency === 'DZD') {
+                exchangeBalanceDZD += balance;
+              }
+            });
+          }
+          // إذا كان هناك حقول منفصلة للمبالغ
+          else if (exchangeData.amountFrom && exchangeData.currencyFrom) {
+            const amount = parseFloat(exchangeData.amountFrom) || 0;
+            const currency = exchangeData.currencyFrom;
+            
+            if (currency === 'USDT') {
+              exchangeBalanceUSDT += amount;
+            } else if (currency === 'DZD') {
+              exchangeBalanceDZD += amount;
+            }
+          }
+          
+          if (exchangeData.amountTo && exchangeData.currencyTo) {
+            const amount = parseFloat(exchangeData.amountTo) || 0;
+            const currency = exchangeData.currencyTo;
+            
+            if (currency === 'USDT') {
+              exchangeBalanceUSDT += amount;
+            } else if (currency === 'DZD') {
+              exchangeBalanceDZD += amount;
+            }
+          }
+        });
+        
+        // جمع إجمالي الأرصدة من المستخدمين وطلبات التبادل
+        const finalTotalDZD = totalBalanceDZD + exchangeBalanceDZD;
+        const finalTotalUSDT = totalBalanceUSDT + exchangeBalanceUSDT;
+        
         // تحديث العرض بالأرقام الفرنسية
         document.getElementById('totalBalanceDZD').textContent = 
-          formatNumberFrench(totalBalanceDZD) + ' DZD';
+          formatNumberFrench(finalTotalDZD) + ' DZD';
         
         document.getElementById('totalBalanceUSDT').textContent = 
-          formatNumberFrench(totalBalanceUSDT) + ' USDT';
+          formatNumberFrench(finalTotalUSDT) + ' USDT';
+        
+        console.log(`📊 إحصائيات الأرصدة:
+          - مستخدمين: ${userCount}
+          - أرصدة DZD من المستخدمين: ${totalBalanceDZD}
+          - أرصدة USDT من المستخدمين: ${totalBalanceUSDT}
+          - طلبات تبادل: ${exchangeCount}
+          - أرصدة DZD من التبادل: ${exchangeBalanceDZD}
+          - أرصدة USDT من التبادل: ${exchangeBalanceUSDT}
+          - الإجمالي DZD: ${finalTotalDZD}
+          - الإجمالي USDT: ${finalTotalUSDT}
+        `);
         
         hideLoading();
-        return { totalBalanceDZD, totalBalanceUSDT, userCount };
+        return { 
+          totalBalanceDZD: finalTotalDZD, 
+          totalBalanceUSDT: finalTotalUSDT, 
+          userCount,
+          exchangeCount,
+          userDZD: totalBalanceDZD,
+          userUSDT: totalBalanceUSDT,
+          exchangeDZD: exchangeBalanceDZD,
+          exchangeUSDT: exchangeBalanceUSDT
+        };
         
       } catch (error) {
         console.error('❌ خطأ في حساب إجمالي الأرصدة:', error);
